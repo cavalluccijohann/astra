@@ -1,10 +1,10 @@
 import { View, Text } from 'react-native';
 import React from "react";
 
-export default function Screen1() {
+export default function Feed() {
     return (
         <View style={{ flex: 1 }}>
-            <Text>Screen 1</Text>
+            <Text>Feed</Text>
         </View>
     );
 }

@@ -2,7 +2,7 @@ import { Camera, CameraType } from 'expo-camera';
 import React, { useState } from 'react';
 import { TouchableOpacity, View, Text } from 'react-native';
 
-export default function TestComponent() {
+export default function CameraComponent() {
     const [type, setType] = useState(CameraType.back);
     const [isCameraReady, setIsCameraReady] = useState(false);
     let camera: Camera | null = null;
