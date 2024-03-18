@@ -1,45 +1,41 @@
-import { Button, Text, TouchableOpacity, View } from 'react-native';
-import { NativeWindStyleSheet } from "nativewind";
-import { Camera, CameraType } from 'expo-camera';
-import { useState } from 'react';
 import React from 'react';
+import { View, Text } from 'react-native';
+import TestComponent from './component/test';
+import Screen1 from './component/screen1';
+import Screen2 from './component/screen2';
+import NavBar from './component/layouts/navBar';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator} from "@react-navigation/bottom-tabs";
+import Iconicons from 'react-native-vector-icons/Ionicons';
+
 
 export default function App() {
-    const [type, setType] = useState(CameraType.back);
-    const [permission, requestPermission] = Camera.useCameraPermissions();
-
-    if (!permission) {
-        // Camera permissions are still loading
-        return <View />;
-    }
-
-    if (!permission.granted) {
-        // Camera permissions are not granted yet
-        return (
-            <View className="flex-1 items-center justify-center">
-                <Text className="text-center">We need your permission to show the camera</Text>
-                <Button onPress={requestPermission} title="grant permission" />
-            </View>
-        );
-    }
-
-    function toggleCameraType() {
-        setType(current => (current === CameraType.back ? CameraType.front : CameraType.back));
-    }
-
+    const tab = createBottomTabNavigator();
     return (
-        <View className="flex-1 justify-center">
-            <Camera type={type} className="flex-1">
-                <View className="flex-1 items-center justify-center bg-transparent">
-                    <TouchableOpacity onPress={toggleCameraType}>
-                        <Text className="text-red-500 text-2xl">Flip Camera</Text>
-                    </TouchableOpacity>
-                </View>
-            </Camera>
+        <NavigationContainer>
+        <View style={{ flex: 1 }}>
+            <tab.Navigator
+                screenOptions={({ route }) => ({
+                    tabBarIcon: ({ focused, color, size }) => {
+                        let iconName;
+                        if (route.name === 'Camera') {
+                            iconName = focused ? 'camera' : 'camera';
+                        } else if (route.name === 'Feed') {
+                            iconName = focused ? 'home' : 'home';
+                        } else if (route.name === 'Screen2') {
+                            iconName = focused ? 'list' : 'list';
+                        }
+                        return <Iconicons name={iconName} size={size} color={color} />;
+                    },
+                    tabBarLabel: () => null,
+                    headerShown: false,
+                })}
+            >
+                <tab.Screen name={"Camera"} component={TestComponent} />
+                <tab.Screen name={"Feed"} component={Screen1} />
+                <tab.Screen name={"Screen2"} component={Screen2} />
+            </tab.Navigator>
         </View>
+        </NavigationContainer>
     );
 }
-
-NativeWindStyleSheet.setOutput({
-    default: "native",
-});
