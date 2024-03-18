@@ -31,7 +31,7 @@ export default function App() {
             <Camera style={styles.camera} type={type}>
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
-                        <Text style={styles.text}>Flip Camera</Text>
+                        <Text className="text-red-500 text-2xl">Flip Camera</Text>
                     </TouchableOpacity>
                 </View>
             </Camera>
@@ -57,10 +57,5 @@ const styles = StyleSheet.create({
         flex: 1,
         alignSelf: 'flex-end',
         alignItems: 'center',
-    },
-    text: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: 'white',
     },
 });
