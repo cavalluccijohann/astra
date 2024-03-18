@@ -2,6 +2,7 @@ import { Camera, CameraType } from 'expo-camera';
 import React from 'react';
 import { useState } from 'react';
 import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { NativeWindStyleSheet } from "nativewind";
 
 export default function App() {
     const [type, setType] = useState(CameraType.back);
@@ -58,4 +59,8 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-end',
         alignItems: 'center',
     },
+});
+
+NativeWindStyleSheet.setOutput({
+    default: "native",
 });
