@@ -28,6 +28,7 @@ export default function App() {
                         } else if (route.name === 'Account') {
                             iconName = focused ? 'person-circle-outline' : 'person-circle-outline';
                         }
+                        // @ts-ignore
                         return <Iconicons name={iconName} size={size} color={color}/>;
                     },
                     tabBarLabel: () => null,
