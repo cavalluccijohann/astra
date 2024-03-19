@@ -24,7 +24,7 @@ model Album {
   title  String
   userId String
   public Boolean @default(false)
-  user   User    @relation(fields: [userId], references: [id])
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   photos Photo[] @relation("AlbumToPhoto")
 }
 

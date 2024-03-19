@@ -4,5 +4,7 @@ export default defineNitroConfig({
 
   runtimeConfig: {
     authSecret: process.env.AUTH_SECRET,
+    supabaseUrl: process.env.SUPABASE_URL,
+    supabaseKey: process.env.SUPABASE_ANON_KEY,
   },
 });
