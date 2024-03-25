@@ -25,6 +25,7 @@ export async function uploadPhoto(user: User, image: File) {
   return prisma.photo.create({
     data: {
       name: image.name,
+      type: image.type,
       url: `${publicUrl}${user.id}/${image.name}`,
       albums: {
         connect: {
@@ -64,4 +65,17 @@ export async function deletePhoto(user: User, id: string) {
       id,
     },
   });
+}
+
+export function checkPhoto(photo: File) {
+  const allowedFileTypes = ["image/jpeg", "image/png", "image/gif", "image/jpg"];
+  const fileType = photo.type;
+  if (!allowedFileTypes.includes(fileType)) {
+    throw new Error("File type not allowed");
+  }
+  const fileSize = photo.size;
+  if (fileSize > 15 * 1024 * 1024) {
+    throw new Error("File size too large");
+  }
+  return true;
 }
