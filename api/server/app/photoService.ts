@@ -1,3 +1,4 @@
+import type { StreamingBlobPayloadInputTypes } from "@smithy/types";
 import { awsClient, publicUrl } from "../amazon";
 import aws from "@aws-sdk/client-s3";
 import { User } from "../types/User";
@@ -5,7 +6,7 @@ import prisma from "../client";
 
 const runtimeConfig = useRuntimeConfig();
 
-export async function uploadPhoto(user: User, file: File) {
+export async function uploadPhoto(user: User, image: File) {
   const album = await prisma.album.findFirst({
     where: {
       userId: user.id,
@@ -14,16 +15,17 @@ export async function uploadPhoto(user: User, file: File) {
   });
   if (!album) throw new Error("Album not found");
   if (album.userId !== user.id) throw new Error("Unauthorized");
+  const photo = await image.arrayBuffer() as StreamingBlobPayloadInputTypes;
   const command = new aws.PutObjectCommand({
     Bucket: runtimeConfig.awsBucket,
-    Key: `${user.id}/${file.name}`,
-    Body: file,
+    Key: `${user.id}/${image.name}`,
+    Body: photo,
   });
   await awsClient.send(command);
   return prisma.photo.create({
     data: {
-      name: file.name,
-      url: `${publicUrl}${user.id}/${file.name}`,
+      name: image.name,
+      url: `${publicUrl}${user.id}/${image.name}`,
       albums: {
         connect: {
           id: album.id,
