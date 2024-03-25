@@ -27,7 +27,7 @@ export async function createAlbum(user: User, name: string, isPublic: boolean) {
 export async function createUserDefaultAlbum(user: User) {
   const command = new aws.PutObjectCommand({
     Bucket: runtimeConfig.awsBucket,
-    Key: `${user.username}/`,
+    Key: `${user.id}/`,
   });
   await awsClient.send(command);
   return prisma.album.create({

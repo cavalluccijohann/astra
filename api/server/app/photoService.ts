@@ -16,14 +16,14 @@ export async function uploadPhoto(user: User, file: File) {
   if (album.userId !== user.id) throw new Error("Unauthorized");
   const command = new aws.PutObjectCommand({
     Bucket: runtimeConfig.awsBucket,
-    Key: `${user.username}/${file.name}`,
+    Key: `${user.id}/${file.name}`,
     Body: file,
   });
   await awsClient.send(command);
   return prisma.photo.create({
     data: {
       name: file.name,
-      url: `${publicUrl}${user.username}/${album.title}/${file.name}`,
+      url: `${publicUrl}${user.id}/${file.name}`,
       albums: {
         connect: {
           id: album.id,
