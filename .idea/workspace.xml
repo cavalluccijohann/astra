@@ -38,7 +38,7 @@
     "deletionFromPopupRequiresConfirmation": "false",
     "git-widget-placeholder": "master",
     "ignore_missing_gitignore": "true",
-    "last_opened_file_path": "/Users/hugorcd/Dev/astra/api/server/routes/user",
+    "last_opened_file_path": "/Users/hugorcd/Dev/astra/api/server/routes/album/[id]",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -52,11 +52,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/api/server/routes/album/[id]" />
+      <recent name="$PROJECT_DIR$/api/server/routes/album/user/[id]" />
+      <recent name="$PROJECT_DIR$/api/server/routes/album/[name]" />
+      <recent name="$PROJECT_DIR$/api/server/routes/album" />
       <recent name="$PROJECT_DIR$/api/server/routes/user" />
-      <recent name="$PROJECT_DIR$/api/server/routes/auth" />
-      <recent name="$PROJECT_DIR$/api/server/app" />
-      <recent name="$PROJECT_DIR$/api/server" />
-      <recent name="$PROJECT_DIR$/api/server/middleware" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/api/server/api" />

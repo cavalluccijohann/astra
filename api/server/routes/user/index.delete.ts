@@ -6,7 +6,9 @@ export default eventHandler(async (event: H3Event) => {
   await deleteUser(user.id);
   deleteCookie(event, "authToken");
   return {
-    statusCode: 200,
-    message: "User deleted",
+    status: 200,
+    content: {
+      message: "User deleted"
+    }
   };
 });

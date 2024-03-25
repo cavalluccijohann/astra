@@ -6,7 +6,9 @@ export default eventHandler(async (event: H3Event) => {
   const body = await readBody(event);
   await updateUser(user.id, body);
   return {
-    statusCode: 200,
-    message: "User updated",
+    status: 200,
+    content: {
+      message: "User updated"
+    }
   };
 });

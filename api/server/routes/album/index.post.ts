@@ -4,9 +4,9 @@ import { H3Event } from "h3";
 export default defineEventHandler(async (event: H3Event) => {
   const user = event.context.user;
   const body = await readBody(event);
-  const { name } = body;
+  const { name, isPublic } = body;
   return {
-    statusCode: 201,
-    body: await createAlbum(user, name),
-  };
+    status: 201,
+    content: await createAlbum(user, name, isPublic)
+  }
 });

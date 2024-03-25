@@ -30,6 +30,7 @@ model Album {
 
 model Photo {
   id     String  @id @default(uuid())
+  name   String
   url    String
   albums Album[] @relation("AlbumToPhoto")
 }
