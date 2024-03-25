@@ -1,6 +1,7 @@
 import prisma, { formatUser } from "../client";
-import { publicUser } from "../types/User";
+import { publicUser, User } from "../types/User";
 import jwt from "jsonwebtoken";
+import { deleteUserAlbums } from "../amazon";
 
 export async function getUserByAuthToken(authToken: string): Promise<publicUser | null> {
   const runtimeConfig = useRuntimeConfig();
@@ -28,10 +29,11 @@ export async function updateUser(userId: string, data: { username: string }): Pr
   return formatUser(updatedUser);
 }
 
-export async function deleteUser(userId: string): Promise<void> {
+export async function deleteUser(user: User): Promise<void> {
   await prisma.user.delete({
     where: {
-      id: userId,
+      id: user.id,
     },
   });
+  await deleteUserAlbums(user);
 }

@@ -13,16 +13,36 @@ const client = new aws.S3Client({
 });
 const publicUrl = `https://${runtimeConfig.awsBucket}.s3.${runtimeConfig.awsRegion}.amazonaws.com/`;
 
-export async function createAlbum(user: User, name: string, isPublic: boolean) {
-  const command = new aws.PutObjectCommand({
-    Bucket: runtimeConfig.awsBucket,
-    Key: `${user.username}/${name}/`,
-  });
-  await client.send(command);
+export async function createAlbum(user: User, name: string, isPublic: boolean, isDefault: boolean = false) {
+  if (isDefault) {
+    const command = new aws.PutObjectCommand({
+      Bucket: runtimeConfig.awsBucket,
+      Key: `${user.username}/`,
+    });
+    await client.send(command);
+    return prisma.album.create({
+      data: {
+        title: name,
+        isPublic: false,
+        isDefault: true,
+        user: {
+          connect: {
+            id: user.id,
+          },
+        },
+      },
+    });
+  } else {
+    const command = new aws.PutObjectCommand({
+      Bucket: runtimeConfig.awsBucket,
+      Key: `${user.username}/${name}/`,
+    });
+    await client.send(command);
+  }
   return prisma.album.create({
     data: {
       title: name,
-      public: isPublic,
+      isPublic: isPublic,
       user: {
         connect: {
           id: user.id,
@@ -68,7 +88,7 @@ export async function getAlbum(user: User, id: string) {
 export async function getPublicAlbums() {
   return prisma.album.findMany({
     where: {
-      public: true,
+      isPublic: true,
     },
     include: {
       photos: true,
@@ -79,13 +99,6 @@ export async function getPublicAlbums() {
       }
     }
   });
-}
-
-export async function getBucketObjects(bucketName: string) {
-  const command = new aws.ListObjectsV2Command({
-    Bucket: bucketName,
-  });
-  return await client.send(command);
 }
 
 export async function getUserAlbums(user: User) {
@@ -115,6 +128,7 @@ export async function uploadPhoto(user: User, albumId: string, file: File) {
   await client.send(command);
   return prisma.photo.create({
     data: {
+      name: file.name,
       url: `${publicUrl}${user.username}/${album.title}/${file.name}`,
       albums: {
         connect: {
@@ -126,57 +140,41 @@ export async function uploadPhoto(user: User, albumId: string, file: File) {
 
 }
 
-/*export async function getUserAlbums(user: User) {
-  const command = new aws.ListObjectsV2Command({
-    Bucket: runtimeConfig.awsBucket,
-    Prefix: user.username,
+export async function deletePhoto(user: User, id: string) {
+  const photo = await prisma.photo.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      albums: true,
+    }
   });
-  const albumsResponse = await client.send(command);
-  /!*return await Promise.all(
-    filteredAlbums?.map(async (album) => {
-      const objectCommand = new aws.GetObjectCommand({
-        Bucket: runtimeConfig.awsBucket,
-        Key: album.Key,
-      });
-      const object = await client.send(objectCommand);
-      return {
-        Key: album.Key,
-        LastModified: object.LastModified,
-        Size: object.ContentLength,
-        ContentType: object.ContentType,
-        Url: `${ publicUrl }${ album.Key }`,
-      };
-    }) ?? []
-  );*!/
-  // return like [{ name: "album1", images: [{ name: "image1", url: "https://..." }] }]
-const formattedAlbums = await Promise.all(
-  albumsResponse?.Contents.map(async (album) => {
-      const albumName = album.Key.split("/")[1];
-      const albumCommand = new aws.ListObjectsV2Command({
-        Bucket: runtimeConfig.awsBucket,
-        Prefix: album.Key,
-      });
-      const albumResponse = await client.send(albumCommand);
-      return {
-        name: albumName,
-        images: await Promise.all(
-          albumResponse?.Contents?.map(async (image) => {
-            const imageCommand = new aws.GetObjectCommand({
-              Bucket: runtimeConfig.awsBucket,
-              Key: image.Key,
-            });
-            const object = await client.send(imageCommand);
-            return {
-              name: image.Key.split("/")[2],
-              size: object.ContentLength,
-              contentType: object.ContentType,
-              url: `${ publicUrl }${ image.Key }`,
-            };
-          }) ?? []
-        ),
-      };
-    }) ?? []
-  );
-  // remove duplicates
-  return formattedAlbums.filter((album, index, self) => self.findIndex(a => a.name === album.name) === index);
-}*/
+  if (!photo) throw new Error("Photo not found");
+  if (photo.userId !== user.id) throw new Error("Unauthorized");
+  for (const album of photo.albums) {
+    if (album.userId !== user.id) throw new Error("Unauthorized");
+    const command = new aws.DeleteObjectCommand({
+      Bucket: runtimeConfig.awsBucket,
+      Key: `${user.username}/${album.title}/${photo.name}`,
+    });
+    await client.send(command);
+  }
+  return prisma.photo.delete({
+    where: {
+      id,
+    },
+  });
+}
+
+export async function deleteUserAlbums(user: User) {
+  const command = new aws.DeleteObjectCommand({
+    Bucket: runtimeConfig.awsBucket,
+    Key: `${user.username}/`,
+  });
+  await client.send(command);
+  return prisma.album.deleteMany({
+    where: {
+      userId: user.id,
+    },
+  });
+}

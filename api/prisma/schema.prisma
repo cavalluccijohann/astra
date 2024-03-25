@@ -17,20 +17,24 @@ model User {
   password  String
   authToken String?
   albums    Album[]
+  photos    Photo[]
 }
 
 model Album {
-  id     String  @id @default(uuid())
-  title  String
-  userId String
-  public Boolean @default(false)
-  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  photos Photo[] @relation("AlbumToPhoto")
+  id        String  @id @default(uuid())
+  title     String
+  userId    String
+  isPublic  Boolean @default(false)
+  isDefault Boolean @default(false)
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  photos    Photo[] @relation("AlbumToPhoto")
 }
 
 model Photo {
   id     String  @id @default(uuid())
   name   String
   url    String
+  userId String
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   albums Album[] @relation("AlbumToPhoto")
 }

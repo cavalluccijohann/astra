@@ -3,7 +3,7 @@ import { H3Event } from "h3";
 
 export default eventHandler(async (event: H3Event) => {
   const user = event.context.user;
-  await deleteUser(user.id);
+  await deleteUser(user);
   deleteCookie(event, "authToken");
   return {
     status: 200,

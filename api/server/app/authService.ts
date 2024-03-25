@@ -2,6 +2,7 @@ import { CreateUserInput, publicUser, User } from "../types/User";
 import prisma, { formatUser } from "../client";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+import { createAlbum } from "../amazon";
 
 export async function registerUser(createUserInput: CreateUserInput): Promise<publicUser> {
   const passwordHash = await bcrypt.hash(createUserInput.password, 10);
@@ -12,6 +13,7 @@ export async function registerUser(createUserInput: CreateUserInput): Promise<pu
       password: passwordHash,
     },
   });
+  await createAlbum(user as User, `${user.username}'s album`, true, true)
   return formatUser(user);
 }
 
