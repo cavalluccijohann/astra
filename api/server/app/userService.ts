@@ -1,7 +1,7 @@
-import prisma, { formatUser } from "../client";
+import { deleteUserAlbums } from "./albumService";
 import { publicUser, User } from "../types/User";
+import prisma, { formatUser } from "../client";
 import jwt from "jsonwebtoken";
-import { deleteUserAlbums } from "../amazon";
 
 export async function getUserByAuthToken(authToken: string): Promise<publicUser | null> {
   const runtimeConfig = useRuntimeConfig();

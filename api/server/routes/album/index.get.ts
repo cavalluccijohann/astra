@@ -1,4 +1,4 @@
-import { getPublicAlbums } from "../../amazon";
+import { getPublicAlbums } from "../../app/albumService";
 import { H3Event } from "h3";
 
 export default defineEventHandler(async (event: H3Event) => {
