@@ -54,7 +54,7 @@ export async function deleteAlbum(user: User, id: string) {
   if (album.userId !== user.id) throw new Error("Unauthorized");
   const command = new aws.DeleteObjectCommand({
     Bucket: runtimeConfig.awsBucket,
-    Key: `${user.username}/${album.title}/`,
+    Key: `${user.id}/${album.title}/`,
   });
   await awsClient.send(command);
   return prisma.album.delete({
@@ -107,7 +107,7 @@ export async function getUserAlbums(user: User) {
 export async function deleteUserAlbums(user: User) {
   const command = new aws.DeleteObjectCommand({
     Bucket: runtimeConfig.awsBucket,
-    Key: `${user.username}/`,
+    Key: `${user.id}/`,
   });
   await awsClient.send(command);
   return prisma.album.deleteMany({

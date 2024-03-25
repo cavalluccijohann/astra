@@ -53,7 +53,7 @@ export async function deletePhoto(user: User, id: string) {
     if (album.userId !== user.id) throw new Error("Unauthorized");
     const command = new aws.DeleteObjectCommand({
       Bucket: runtimeConfig.awsBucket,
-      Key: `${user.username}/${album.title}/${photo.name}`,
+      Key: `${user.id}/${album.title}/${photo.name}`,
     });
     await awsClient.send(command);
   }
