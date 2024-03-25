@@ -8,7 +8,7 @@ const runtimeConfig = useRuntimeConfig();
 export async function createAlbum(user: User, name: string, isPublic: boolean) {
   const command = new aws.PutObjectCommand({
     Bucket: runtimeConfig.awsBucket,
-    Key: `${user.username}/${name}/`,
+    Key: `${user.id}/${name}/`,
   });
   await awsClient.send(command);
   return prisma.album.create({
