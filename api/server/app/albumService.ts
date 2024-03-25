@@ -51,7 +51,7 @@ export async function deleteAlbum(user: User, id: string) {
     },
   });
   if (!album) throw new Error("Album not found");
-  if (album.userId !== user.id) throw new Error("Unauthorized");
+  if (album.userId !== user.id || album.isDefault) throw new Error("Unauthorized");
   const command = new aws.DeleteObjectCommand({
     Bucket: runtimeConfig.awsBucket,
     Key: `${user.id}/${album.title}/`,
