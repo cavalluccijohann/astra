@@ -1,5 +1,4 @@
 import { type User as prismaUser, PrismaClient } from "@prisma/client";
-import { createClient } from '@supabase/supabase-js'
 import { publicUser } from "./types/User";
 
 const prisma = new PrismaClient()
