@@ -13,7 +13,7 @@ export type publicUser = {
   id: string;
   username: string;
   email: string;
-  albums: Album[];
+  albums?: Album[];
 };
 
 export type CreateUserInput = {
