@@ -31,7 +31,7 @@ const LoginScreen = ({ navigation }: Props) => {
         console.log(email, password);
 
         try {
-            const response = await fetch('https://aade-163-5-23-73.ngrok-free.app/auth/login', {
+            const response = await fetch('https://api.astra.hrcd.fr/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
