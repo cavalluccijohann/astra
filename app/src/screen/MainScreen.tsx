@@ -7,7 +7,7 @@ import {View} from "react-native";
 import React from "react";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 const tab = createBottomTabNavigator();
-export default function mainScreen() {
+export default function MainScreen() {
     return (
         <View style={{ flex: 1 }}>
             <tab.Navigator

@@ -9,7 +9,6 @@ import BackButton from '../component/BackButton';
 import { theme } from '../core/theme';
 import { emailValidator, passwordValidator } from '../core/utils';
 import { Navigation } from '../types';
-import Camera from '../screen/Camera';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type Props = {
@@ -48,6 +47,7 @@ const LoginScreen = ({ navigation }: Props) => {
                 // Redirigez l'utilisateur vers l'écran suivant (par exemple, le tableau de bord)
                 const authToken = data.authToken;
                 await AsyncStorage.setItem('authToken', authToken);
+                navigation.navigate('Main');
             } else {
                 // Authentification échouée
                 // Affichez un message d'erreur à l'utilisateur
@@ -62,7 +62,7 @@ const LoginScreen = ({ navigation }: Props) => {
 
     return (
         <Background>
-            <BackButton goBack={() => navigation.navigate('HomeScreen')} />
+            <BackButton goBack={() => navigation.navigate('Main')} />
             <Logo />
             <Header>Welcome back.</Header>
             <TextInput
