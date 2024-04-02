@@ -79,3 +79,11 @@ export function checkPhoto(photo: File) {
   }
   return true;
 }
+
+export async function getUserPhotos(userId: string) {
+  return prisma.photo.findMany({
+    where: {
+      userId,
+    },
+  });
+}
