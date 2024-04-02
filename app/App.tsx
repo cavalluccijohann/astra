@@ -3,7 +3,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import MainScreen from "./src/screen/MainScreen";
 import { createStackNavigator } from '@react-navigation/stack';
-import LoginPage from './src/screen/LoginScreen';
+import Login from './src/screen/LoginScreen';
+import Register from './src/screen/RegisterScreen';
 import Library from "./src/screen/Library";
 import Account from "./src/screen/Account";
 import Camera from "./src/screen/Camera";
@@ -20,12 +21,15 @@ export default function App() {
             try {
                 // Récupérer les données d'authentification depuis le stockage local
                 const userToken = await AsyncStorage.getItem('authToken');
+                console.log(userToken);
                 // Vérifier si les données d'authentification existent
                 if (userToken) {
                     // Si les données d'authentification existent, l'utilisateur est connecté
+                    console.log("test", isLoggedIn);
                     setIsLoggedIn(true);
                 } else {
                     // Sinon, l'utilisateur n'est pas connecté
+                    console.log('Utilisateur non connecté');
                     setIsLoggedIn(false);
                 }
             } catch (error) {
@@ -35,18 +39,23 @@ export default function App() {
         };
 
         // Appeler la fonction pour vérifier l'état de connexion
-        checkLoginStatus();
+        console.log('Vérification de l\'état de connexion...');
+        checkLoginStatus().then(r => console.log('Vérification terminée'));
     }, []);
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName={isLoggedIn ? 'Main' : 'Login'}>
-                <Stack.Screen name="Login" component={LoginPage} options={{ headerShown: false }} />
+            <Stack.Navigator>
+                {!isLoggedIn && (
+                    <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+                )}
                 <Stack.Screen name="Main" component={MainScreen} options={{ headerShown: false }} />
+                <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
                 <Stack.Screen name="Library" component={Library} options={{ headerShown: false }} />
                 <Stack.Screen name="Feed" component={Feed} options={{ headerShown: false }} />
                 <Stack.Screen name="Camera" component={Camera} options={{ headerShown: false }} />
                 <Stack.Screen name="Account" component={Account} options={{ headerShown: false }} />
             </Stack.Navigator>
         </NavigationContainer>
+
     );
 }

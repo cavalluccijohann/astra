@@ -15,29 +15,32 @@ type Props = {
     navigation: Navigation;
 };
 
-const LoginScreen = ({ navigation }: Props) => {
+const RegisterScreen = ({ navigation }: Props) => {
     const [email, setEmail] = useState({ value: '', error: '' });
     const [password, setPassword] = useState({ value: '', error: '' });
+    const [userName, setUserName] = useState({ value: '', error: '' });
 
-    const _onLoginPressed = async () => {
+    const _onRegisterPressed = async () => {
         const emailError = emailValidator(email.value);
         const passwordError = passwordValidator(password.value);
+        const userNameError = passwordValidator(userName.value);
 
-        if (emailError || passwordError) {
+        if (emailError || passwordError || userNameError) {
             setEmail({ ...email, error: emailError });
             setPassword({ ...password, error: passwordError });
+            setUserName({ ...userName, error: userNameError });
             return;
         }
 
-        console.log(email, password);
+        console.log(email, password, userName);
 
         try {
-            const response = await fetch('https://api.astra.hrcd.fr/auth/login', {
+            const response = await fetch('https://api.astra.hrcd.fr/auth/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ email: email.value, password: password.value })
+                body: JSON.stringify({ email: email.value, password: password.value, username: userName.value })
             });
 
             const data = await response.json();
@@ -45,9 +48,7 @@ const LoginScreen = ({ navigation }: Props) => {
             if (response.ok) {
                 // Authentification réussie
                 // Redirigez l'utilisateur vers l'écran suivant (par exemple, le tableau de bord)
-                const authToken = data.authToken;
-                await AsyncStorage.setItem('authToken', authToken);
-                navigation.navigate('Main');
+                navigation.navigate('Login');
             } else {
                 // Authentification échouée
                 // Affichez un message d'erreur à l'utilisateur
@@ -62,8 +63,10 @@ const LoginScreen = ({ navigation }: Props) => {
 
     return (
         <Background>
+            <BackButton goBack={() => navigation.navigate('Login')} />
             <Logo />
-            <Header>Welcome back.</Header>
+            <Header>Welcome.</Header>
+
             <TextInput
                 label="Email"
                 returnKeyType="next"
@@ -78,6 +81,16 @@ const LoginScreen = ({ navigation }: Props) => {
             />
 
             <TextInput
+                label="Username"
+                returnKeyType="next"
+                value={userName.value}
+                onChangeText={text => setUserName({ value: text, error: '' })}
+                error={!!userName.error}
+                errorText={userName.error}
+                autoCapitalize="none"
+            />
+
+            <TextInput
                 label="Password"
                 returnKeyType="done"
                 value={password.value}
@@ -87,37 +100,13 @@ const LoginScreen = ({ navigation }: Props) => {
                 secureTextEntry
             />
 
-            <Button mode="contained" onPress={_onLoginPressed}>
-                Login
+            <Button mode="contained" onPress={_onRegisterPressed}>
+                Register
             </Button>
 
-            <View style={styles.row}>
-                <Text style={styles.label}>Don’t have an account? </Text>
-                <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-                    <Text style={styles.link}>Sign up</Text>
-                </TouchableOpacity>
-            </View>
         </Background>
     );
 };
 
-const styles = StyleSheet.create({
-    forgotPassword: {
-        width: '100%',
-        alignItems: 'flex-end',
-        marginBottom: 24,
-    },
-    row: {
-        flexDirection: 'row',
-        marginTop: 4,
-    },
-    label: {
-        color: theme.colors.secondary,
-    },
-    link: {
-        fontWeight: 'bold',
-        color: theme.colors.primary,
-    },
-});
 
-export default memo(LoginScreen);
+export default memo(RegisterScreen);
