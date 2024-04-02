@@ -8,8 +8,8 @@ export default function Account() {
   };
 
   return (
-    <View style={{ flex: 1, marginTop: 20 }}>
-      <Text>Account</Text>
+    <View className='mt-20'>
+      <Text className='text-red-500'>Account</Text>
       <Button title="Remove Auth Token" onPress={removeAuthToken} />
     </View>
   );

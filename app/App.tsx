@@ -8,6 +8,7 @@ import Library from "./src/screen/Library";
 import Account from "./src/screen/Account";
 import Camera from "./src/screen/Camera";
 import Feed from "./src/screen/Feed";
+import './global.css';
 const Stack = createStackNavigator();
 
 export default function App() {
