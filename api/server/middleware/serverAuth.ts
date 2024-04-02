@@ -12,7 +12,9 @@ export default defineEventHandler(async (event: H3Event) => {
     return;
   }
 
-  const authToken = getCookie(event, "authToken");
+  const authHeader = event.headers.get("Authorization");
+  if (!authHeader) return null;
+  const authToken = authHeader.split(" ")[1];
   if (!authToken) {
     return sendError(
       event,

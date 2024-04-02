@@ -15,7 +15,7 @@ export default function App() {
         const checkLoginStatus = async () => {
             try {
                 // Récupérer les données d'authentification depuis le stockage local
-                const userToken = await AsyncStorage.getItem('userToken');
+                const userToken = await AsyncStorage.getItem('authToken');
                 // Vérifier si les données d'authentification existent
                 if (userToken) {
                     // Si les données d'authentification existent, l'utilisateur est connecté

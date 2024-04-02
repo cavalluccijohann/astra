@@ -9,6 +9,8 @@ import BackButton from '../component/BackButton';
 import { theme } from '../core/theme';
 import { emailValidator, passwordValidator } from '../core/utils';
 import { Navigation } from '../types';
+import Camera from '../screen/Camera';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type Props = {
     navigation: Navigation;
@@ -37,16 +39,15 @@ const LoginScreen = ({ navigation }: Props) => {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ email: email.value, password: password.value })
-
             });
 
             const data = await response.json();
-            console.log("response data ->", data);
 
             if (response.ok) {
                 // Authentification réussie
                 // Redirigez l'utilisateur vers l'écran suivant (par exemple, le tableau de bord)
-                navigation.navigate('Dashboard');
+                const authToken = data.authToken;
+                await AsyncStorage.setItem('authToken', authToken);
             } else {
                 // Authentification échouée
                 // Affichez un message d'erreur à l'utilisateur
