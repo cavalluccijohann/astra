@@ -5,7 +5,6 @@ import Logo from '../component/Logo';
 import Header from '../component/Header';
 import Button from '../component/Button';
 import TextInput from '../component/TextInput';
-import BackButton from '../component/BackButton';
 import { theme } from '../core/theme';
 import { emailValidator, passwordValidator } from '../core/utils';
 import { Navigation } from '../types';
