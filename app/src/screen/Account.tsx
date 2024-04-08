@@ -3,13 +3,18 @@ import { View, Text, ScrollView, TextInput, TouchableOpacity, Alert } from 'reac
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from "../component/Header";
 import { $fetch } from "../core/utils";
+import { Navigation } from "../types";
 
 type User = {
   username: string;
   email: string;
 }
 
-export default function Account() {
+type Props = {
+  navigation: Navigation;
+};
+
+export default function Account({ navigation }: Props) {
   const [user, setUser] = useState<User>({
     username: '',
     email: '',
@@ -40,6 +45,7 @@ export default function Account() {
 
   const removeAuthToken = async () => {
     await AsyncStorage.removeItem('authToken');
+    navigation.navigate('Login');
   };
 
   const updateAccount = async () => {

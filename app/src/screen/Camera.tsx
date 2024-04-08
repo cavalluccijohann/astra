@@ -1,7 +1,7 @@
 import { Text, View, TouchableOpacity, Alert, ImageBackground } from 'react-native'
 import { $fetch } from "../core/utils";
 import { Camera } from 'expo-camera'
-import React from 'react'
+import React, { useEffect } from 'react'
 
 let camera: Camera
 export default function App() {
@@ -9,6 +9,11 @@ export default function App() {
   const [capturedImage, setCapturedImage] = React.useState<any>(null)
   const [cameraType, setCameraType] = React.useState(Camera.Constants.Type.back)
   const [flashMode, setFlashMode] = React.useState('off')
+  const [loading, setLoading] = React.useState(false)
+
+  useEffect(() => {
+    Camera.requestCameraPermissionsAsync().then(r => r)
+  }, []);
 
   const __takePicture = async () => {
     const photo: any = await camera.takePictureAsync()
@@ -16,6 +21,7 @@ export default function App() {
     setCapturedImage(photo)
   }
   const __savePhoto = async () => {
+    setLoading(true)
     const images = new FormData();
     images.append('images', {
       uri: capturedImage.uri,
@@ -27,10 +33,12 @@ export default function App() {
     try {
       await $fetch('POST', 'photo', images);
       Alert.alert('Photo saved');
+      __retakePicture();
     } catch (error) {
       console.error('Error saving photo:', error);
       Alert.alert('Error saving photo')
     }
+    setLoading(false)
   }
   const __retakePicture = () => {
     setCapturedImage(null)
@@ -56,7 +64,7 @@ export default function App() {
     <View className='flex-1'>
       <View className='flex-1 w-full'>
         { previewVisible && capturedImage ? (
-          <CameraPreview photo={ capturedImage } savePhoto={ __savePhoto } retakePicture={ __retakePicture }/>
+          <CameraPreview photo={ capturedImage } savePhoto={ __savePhoto } retakePicture={ __retakePicture } loading={ loading } />
         ) : (
           <Camera
             type={ cameraType }
@@ -103,7 +111,7 @@ export default function App() {
   )
 }
 
-const CameraPreview = ({photo, retakePicture, savePhoto}: any) => {
+const CameraPreview = ({photo, retakePicture, savePhoto, loading}: any) => {
   return (
     <View className='flex-1 w-full bg-transparent flex flex-col justify-between'>
       <ImageBackground source={ {uri: photo && photo.uri} } className='flex-1'>
@@ -119,7 +127,11 @@ const CameraPreview = ({photo, retakePicture, savePhoto}: any) => {
               onPress={ savePhoto }
               className='px-3 py-2 rounded-md flex items-center justify-center bg-blue-500'
             >
-              <Text className='text-white'>Save</Text>
+              { loading ? (
+                <Text className='text-white'>Saving...</Text>
+              ) : (
+                <Text className='text-white'>Save</Text>
+              )}
             </TouchableOpacity>
           </View>
         </View>
