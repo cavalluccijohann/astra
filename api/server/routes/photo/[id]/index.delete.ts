@@ -1,6 +1,6 @@
 
 import { H3Event } from "h3";
-import { deletePhoto } from "../../app/photoService";
+import { deletePhoto } from "../../../app/photoService";
 
 export default defineEventHandler(async (event: H3Event) => {
     const user = event.context.user;
