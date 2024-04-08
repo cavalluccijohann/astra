@@ -6,7 +6,7 @@ type Props = {
 };
 
 const Header = (props: Props) => (
-  <View className='h-24 flex items-start justify-end bg-neutral-900 px-2'>
+  <View className='h-24 flex items-start justify-end bg-neutral-950 px-2'>
     <Text className='text-4xl font-bold text-white'>
       {props.name}
     </Text>
