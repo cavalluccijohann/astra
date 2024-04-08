@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { List } from "react-native-paper";
 import Header from "../component/Header";
+import { $fetch } from "../core/utils";
 
 type Photo = {
   id: string;
@@ -16,15 +17,8 @@ export default function Library() {
 
   useEffect(() => {
     const fetchUserAlbums = async () => {
-        const authToken = await AsyncStorage.getItem('authToken');
         try {
-            const response = await fetch('https://api.astra.hrcd.fr/album/user', {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${authToken}`,
-            },
-            });
-            const data = await response.json();
+            const data = await $fetch('GET', 'album/user')
             setAlbums(data.content);
         } catch (error) {
             console.log('Error fetching user albums:', error);
@@ -35,13 +29,7 @@ export default function Library() {
     const fetchUserLibrary = async () => {
       const authToken = await AsyncStorage.getItem('authToken');
       try {
-        const response = await fetch('https://api.astra.hrcd.fr/photo', {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${authToken}`,
-          },
-        });
-        const data = await response.json();
+        const data = await $fetch('GET', 'photo');
         setPhotos(data.content.photos);
       } catch (error) {
         console.log('Error fetching user library:', error);
