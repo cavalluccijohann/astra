@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, ScrollView, TextInput } from 'react-native';
+import { View, Text, ScrollView, TextInput, TouchableOpacity, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from "../component/Header";
 
@@ -14,6 +14,7 @@ export default function Account() {
     email: '',
   });
   const [loading, setLoading] = useState(true);
+  const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,6 +41,25 @@ export default function Account() {
     await AsyncStorage.removeItem('authToken');
   };
 
+  const updateAccount = async () => {
+    setUpdating(true);
+    try {
+      const userToken = await AsyncStorage.getItem('authToken');
+      await fetch('https://api.astra.hrcd.fr/user', {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${userToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(user),
+      });
+      Alert.alert('User updated');
+    } catch (error) {
+      console.log('Error updating user:', error);
+    }
+    setUpdating(false);
+  }
+
   return (
     <View className='flex-1'>
       <Header name='Account' />
@@ -48,16 +68,25 @@ export default function Account() {
           <Text>Loading...</Text>
         ) : (
           <>
-            <TextInput value={user.username} className='border border-gray-300 rounded p-2 m-2' />
-            <TextInput value={user.email} className='border border-gray-300 rounded p-2 m-2' />
-            <Text onPress={() => {}} className='bg-blue-500 text-white p-2 m-2 rounded'>
-              Update
-            </Text>
+            <TextInput
+              value={user.username}
+              onChangeText={(username) => setUser({ ...user, username })}
+              className='border border-gray-300 rounded p-2 m-2'
+            />
+            <TextInput
+              value={user.email}
+              className='border border-gray-300 rounded p-2 m-2'
+            />
+            <TouchableOpacity onPress={updateAccount} className='bg-blue-500 p-2 m-2 rounded'>
+              <Text className='text-white'>
+                {updating ? 'Updating...' : 'Update'}
+              </Text>
+            </TouchableOpacity>
           </>
         )}
-        <Text onPress={removeAuthToken} className='bg-red-500 text-white p-2 m-2 rounded'>
-          Logout
-        </Text>
+        <TouchableOpacity onPress={removeAuthToken} className='bg-red-500 p-2 m-2 rounded'>
+          <Text className='text-white'>Logout</Text>
+        </TouchableOpacity>
       </ScrollView>
     </View>
   );

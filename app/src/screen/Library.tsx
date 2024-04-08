@@ -11,7 +11,7 @@ type Photo = {
 };
 
 export default function Library() {
-  const [photos, setPhotos] = useState([]);
+  const [photos, setPhotos] = useState<Photo[]>([]);
 
   useEffect(() => {
     const fetchUserLibrary = async () => {
