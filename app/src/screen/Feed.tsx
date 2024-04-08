@@ -1,6 +1,7 @@
-import {View, Text, Image, Alert, Animated, ScrollView} from 'react-native';
+import {View, Text, Image, Alert, Animated, ScrollView, SafeAreaView} from 'react-native';
 import React, {useEffect, useState} from "react";
 import {List} from "react-native-paper";
+import MasonryList from 'react-native-masonry-list';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Feed() {
@@ -34,20 +35,18 @@ export default function Feed() {
     }, []);
 
     return (
-        <ScrollView className='flex-1'>
-            <View className='flex-1 px-6 py-20'>
-                <Text className='text-2xl font-bold'>Feed</Text>
-                <List.Subheader>Photos</List.Subheader>
-                <List.Section className='grid grid-cols-3 gap-4'>
-                    {photos.map((photo, index) => (
-                        <Image
-                            key={index}
-                            source={{uri: photo.url}}
-                            className='w-1/3 h-1/3 rounded'
-                        />
-                    ))}
-                </List.Section>
-            </View>
-        </ScrollView>
+        <SafeAreaView style={{ flex: 1 }}>
+            <MasonryList
+                images={photos.map(photo => ({ uri: photo.url }))}
+                spacing={2}
+                columns={2}
+                renderItem={({ item, index }) => (
+                    <Image
+                        source={item}
+                        style={{ flex: 1, aspectRatio: 1 }}
+                    />
+                )}
+            />
+        </SafeAreaView>
     );
 }
