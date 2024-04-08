@@ -39,12 +39,8 @@ export default function App() {
       blobValue: capturedImage
     });
     try {
-      const response = await $fetch('POST', 'photo', images);
-      if (response.ok) {
-        Alert.alert('Photo saved')
-      } else {
-        Alert.alert('Error saving photo')
-      }
+      await $fetch('POST', 'photo', images);
+      Alert.alert('Photo saved');
     } catch (error) {
       console.error('Error saving photo:', error);
       Alert.alert('Error saving photo')
