@@ -1,12 +1,17 @@
-import {View, Text, Image, Alert, Animated, ScrollView, SafeAreaView} from 'react-native';
+import {View, Image, Alert} from 'react-native';
 import React, {useEffect, useState} from "react";
-import {List} from "react-native-paper";
 import MasonryList from 'react-native-masonry-list';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Header from "../component/Header";
 
+type Photo = {
+    id: string;
+    name: string;
+    url: string;
+};
+
 export default function Feed() {
-    const [photos, setPhotos] = useState([]);
+    const [photos, setPhotos] = useState<Photo[]>([]);
 
     useEffect(() => {
         const fetchPublicAlbum = async () => {
@@ -36,18 +41,19 @@ export default function Feed() {
     }, []);
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
+        <View className='flex-1'>
+            <Header name='Feed' />
             <MasonryList
-                images={photos.map(photo => ({ uri: photo.url }))}
-                spacing={2}
-                columns={2}
-                renderItem={({ item, index }) => (
-                    <Image
-                        source={item}
-                        style={{ flex: 1, aspectRatio: 1 }}
-                    />
-                )}
+              images={photos.map(photo => ({ uri: photo.url }))}
+              spacing={2}
+              columns={2}
+              renderItem={({ item, index }) => (
+                <Image
+                  source={item}
+                  style={{ flex: 1, aspectRatio: 1 }}
+                />
+              )}
             />
-        </SafeAreaView>
+        </View>
     );
 }
