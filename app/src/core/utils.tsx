@@ -1,3 +1,5 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 export const emailValidator = (email: string) => {
   const re = /\S+@\S+\.\S+/;
 
@@ -18,3 +20,24 @@ export const nameValidator = (name: string) => {
 
   return '';
 };
+
+
+export async function $fetch<T>(method: string, endpoint: string, body?: any): Promise<T> {
+  const userToken = await AsyncStorage.getItem('authToken');
+  const url = `https://api.astra.hrcd.fr/${endpoint}`;
+  const requestOptions = {
+    method,
+    headers: {
+      'Authorization': `Bearer ${userToken}`,
+      'Content-Type': 'application/json',
+    },
+    body: body ? body : undefined,
+  };
+
+  const response = await fetch(url, requestOptions);
+  if (!response.ok) {
+    throw new Error(`HTTP error! Status: ${response.status}`);
+  }
+
+  return await response.json();
+}

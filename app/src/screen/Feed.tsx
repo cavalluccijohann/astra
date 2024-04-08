@@ -3,6 +3,7 @@ import React, {useEffect, useState} from "react";
 import MasonryList from 'react-native-masonry-list';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Header from "../component/Header";
+import { $fetch } from "../core/utils";
 
 type Photo = {
     id: string;
@@ -10,20 +11,19 @@ type Photo = {
     url: string;
 };
 
+type Album = {
+    id: string;
+    name: string;
+    photos: Photo[];
+};
+
 export default function Feed() {
     const [photos, setPhotos] = useState<Photo[]>([]);
 
     useEffect(() => {
         const fetchPublicAlbum = async () => {
-            const authToken = await AsyncStorage.getItem('authToken');
             try {
-                const response = await fetch('https://api.astra.hrcd.fr/album', {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${authToken}`,
-                    },
-                });
-                const data = await response.json();
+                const data = await $fetch<{ content: Album[] }>('GET', 'album');
                 const photos = [];
                 for (let i = 0; i < data.content.length; i++) {
                     for (let j = 0; j < data.content[i].photos.length; j++) {
