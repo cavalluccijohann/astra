@@ -1,22 +1,16 @@
 import React, { memo } from 'react';
-import { StyleSheet, Text } from 'react-native';
-import { theme } from '../core/theme';
+import { Text, View } from 'react-native';
 
 type Props = {
-  children: React.ReactNode;
+  name: string;
 };
 
-const Header = ({ children }: Props) => (
-  <Text style={styles.header}>{children}</Text>
+const Header = (props: Props) => (
+  <View className='h-24 flex items-start justify-end bg-neutral-900 px-2'>
+    <Text className='text-4xl font-bold text-white'>
+      {props.name}
+    </Text>
+  </View>
 );
-
-const styles = StyleSheet.create({
-  header: {
-    fontSize: 26,
-    color: theme.colors.primary,
-    fontWeight: 'bold',
-    paddingVertical: 14,
-  },
-});
 
 export default memo(Header);

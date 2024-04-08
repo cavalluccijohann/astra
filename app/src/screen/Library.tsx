@@ -1,7 +1,9 @@
-import { Alert, Button, Image, Text, View } from 'react-native';
+import { Alert, Image, ScrollView, View } from 'react-native';
 import React, { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { List } from "react-native-paper";
+import Header from "../component/Header";
+
 type Photo = {
   id: string;
   name: string;
@@ -33,18 +35,19 @@ export default function Library() {
   }, []);
 
   return (
-    <View className='flex-1 px-6 py-20'>
-      <Text className='text-2xl font-bold'>Library</Text>
-      <List.Subheader>Photos</List.Subheader>
-      <List.Section className='flex flex-wrap'>
-        {photos.map((photo, index) => (
-          <Image
-            key={index}
-            source={{ uri: photo.url }}
-            className='w-1/3 h-1/3'
-          />
-        ))}
-      </List.Section>
+    <View className='flex-1'>
+      <Header name='Library' />
+      <ScrollView className='flex-1'>
+        <List.Section className='flex flex-wrap'>
+          {photos.map((photo, index) => (
+            <Image
+              key={index}
+              source={{ uri: photo.url }}
+              style={{ width: '49%', aspectRatio: 1 }}
+            />
+          ))}
+        </List.Section>
+      </ScrollView>
     </View>
   );
 }

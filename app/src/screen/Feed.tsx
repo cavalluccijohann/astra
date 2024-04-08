@@ -3,6 +3,7 @@ import React, {useEffect, useState} from "react";
 import {List} from "react-native-paper";
 import MasonryList from 'react-native-masonry-list';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Header from "../component/Header";
 
 export default function Feed() {
     const [photos, setPhotos] = useState([]);

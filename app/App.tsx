@@ -10,6 +10,7 @@ import Account from "./src/screen/Account";
 import Camera from "./src/screen/Camera";
 import Feed from "./src/screen/Feed";
 import './global.css';
+import { Headline } from "react-native-paper";
 const Stack = createStackNavigator();
 
 export default function App() {
