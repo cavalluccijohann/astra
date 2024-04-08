@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, ScrollView, TextInput, TouchableOpacity, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from "../component/Header";
+import { $fetch } from "../core/utils";
 
 type User = {
   username: string;
@@ -44,15 +45,7 @@ export default function Account() {
   const updateAccount = async () => {
     setUpdating(true);
     try {
-      const userToken = await AsyncStorage.getItem('authToken');
-      await fetch('https://api.astra.hrcd.fr/user', {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${userToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(user),
-      });
+      await $fetch('PUT', 'user', JSON.stringify(user))
       Alert.alert('User updated');
     } catch (error) {
       console.log('Error updating user:', error);
