@@ -1,4 +1,15 @@
-import {Alert, Image, ScrollView, View, Text, Modal, Button, TouchableOpacity, TextInput} from 'react-native';
+import {
+    Alert,
+    Image,
+    ScrollView,
+    View,
+    Text,
+    Modal,
+    Button,
+    TouchableOpacity,
+    TextInput,
+    RefreshControl
+} from 'react-native';
 import React, {useEffect, useState} from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {List} from "react-native-paper";
@@ -21,6 +32,8 @@ export default function Library() {
     const [photos, setPhotos] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [albumName, setAlbumName] = useState('');
+    const [loading, setLoading] = useState(true);
+
 
     const handleCreateAlbum = async () => {
         const authToken = await AsyncStorage.getItem('authToken');
@@ -42,40 +55,41 @@ export default function Library() {
         } catch (error) {
             console.log('Error fetching user albums:', error);
             Alert.alert('Error fetching user albums');
+        } finally {
+            setLoading(false);
         }
     }
 
-    const handleAlbumPress = (albumId: string, albumName: string) => {
+    const handleAlbumPress = (albumId: string, albumName: string, isDefault: boolean) => {
         // Fonction pour gérer le clic sur un album
-        console.log('Album pressed:', albumId, albumName);
-        navigation.navigate('Album', { albumId, albumName }); // Navigation vers la page de l'album avec l'ID et le nom de l'album
+        navigation.navigate('Album', { albumId, albumName, isDefault });
+    }
+
+    const handleRefresh = () => {
+        setLoading(true);
+        fetchUserAlbums().then(r => r);
     };
 
-
     useEffect(() => {
-        /*const fetchUserLibrary = async () => {
-            const authToken = await AsyncStorage.getItem('authToken');
-            try {
-                const data = await $fetch('GET', 'photo');
-                setPhotos(data.content.photos);
-            } catch (error) {
-                console.log('Error fetching user library:', error);
-                Alert.alert('Error fetching user library');
-            }
-        };
-*/
+        const unsubscribe = navigation.addListener('focus', () => {
+            // Code à exécuter lorsque le composant est affiché à nouveau
+            // ou que la page est focalisée à nouveau
+            handleRefresh();
+        });
 
-        fetchUserAlbums().then(r => r);
-    }, []);
-
+        return unsubscribe; // Nettoyage lors du démontage du composant
+    }, [navigation]);
 
     return (
         <View className='flex-1'>
             <Header name='Library'/>
-            <ScrollView className='flex-1 '>
+            <ScrollView
+                className='flex-1'
+                refreshControl={<RefreshControl refreshing={loading} onRefresh={handleRefresh}/>}
+            >
                 <List.Section className='flex flex-row flex-wrap justify-start px-3'>
                     {albums.map((album, index) => (
-                        <TouchableOpacity className='w-1/2 mx-0' key={index} onPress={() => handleAlbumPress(album.id, album.title)}>
+                        <TouchableOpacity className='w-1/2 mx-0' key={index} onPress={() => handleAlbumPress(album.id, album.title, album.isDefault)}>
                             <View key={index} className='w-10/12 mx-0 mb-3'>
                                 {album.photos.length > 0 ? (
                                     <Image
@@ -104,6 +118,8 @@ export default function Library() {
                             />
                         </View>
                     </TouchableOpacity>
+
+
                 </List.Section>
                 <CreateAlbumModal
                     visible={modalVisible}

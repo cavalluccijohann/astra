@@ -12,6 +12,7 @@ import Feed from "./src/screen/Feed";
 import './global.css';
 import { Headline } from "react-native-paper";
 import Album from "./src/screen/Album";
+import Photo from "./src/screen/Photo";
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -58,6 +59,7 @@ export default function App() {
                 <Stack.Screen name="Camera" component={Camera} options={{ headerShown: false }} />
                 <Stack.Screen name="Account" component={Account} options={{ headerShown: false }} />
                 <Stack.Screen name="Album" component={Album} options={{ headerShown: false }} />
+                <Stack.Screen name="Photo" component={Photo} options={{ headerShown: false }} />
             </Stack.Navigator>
         </NavigationContainer>
 
