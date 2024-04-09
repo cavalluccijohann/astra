@@ -21,9 +21,8 @@ export default function Feed() {
 
     const fetchPublicAlbum = async () => {
         try {
-            const data = await $fetch<{ content: Album[] }>('GET', 'album');
-            const photos = data.content.reduce((accum, album) => accum.concat(album.photos), []);
-            setPhotos(photos);
+            const data = await $fetch<{ content: Photo[] }>('GET', 'album');
+            setPhotos(data.content);
         } catch (error) {
             console.log('Error fetching user library:', error);
             Alert.alert('Error fetching user library');

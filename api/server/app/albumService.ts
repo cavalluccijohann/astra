@@ -78,19 +78,22 @@ export async function getAlbum(user: User, id: string) {
 }
 
 export async function getPublicAlbums() {
-  return prisma.album.findMany({
+  const albums = await prisma.album.findMany({
     where: {
       isPublic: true,
     },
     include: {
       photos: true,
-      user: {
-        select: {
-          username: true,
-        },
-      }
     }
   });
+  const photos = albums.reduce((acc, album) => {
+    return acc.concat(album.photos);
+  }, []);
+  for (let i = photos.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [photos[i], photos[j]] = [photos[j], photos[i]];
+  }
+  return photos;
 }
 
 export async function getUserAlbums(user: User) {
