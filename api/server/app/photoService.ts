@@ -41,6 +41,32 @@ export async function uploadPhoto(user: User, image: File) {
   });
 }
 
+export async function deletePhotoAlbum(user: User, photoId: string, albumId: string) {
+    const photo = await prisma.photo.findUnique({
+        where: {
+        id: photoId,
+        },
+        include: {
+        albums: true,
+        }
+    });
+    if (!photo) throw new Error("Photo not found");
+    if (photo.userId !== user.id) throw new Error("Unauthorized");
+    if (photo.albums[0].userId !== user.id) throw new Error("Unauthorized");
+    return prisma.photo.update({
+        where: {
+        id: photoId,
+        },
+        data: {
+        albums: {
+            disconnect: {
+            id: albumId,
+            },
+        },
+        },
+    });
+}
+
 export async function deletePhoto(user: User, id: string) {
   const photo = await prisma.photo.findUnique({
     where: {
