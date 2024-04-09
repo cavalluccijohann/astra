@@ -116,3 +116,21 @@ export async function deleteUserAlbums(user: User) {
     },
   });
 }
+
+export async function toggleAlbumPrivacy(user: User, id: string) {
+  const album = await prisma.album.findUnique({
+    where: {
+      id,
+    },
+  });
+  if (!album) throw new Error("Album not found");
+  if (album.userId !== user.id) throw new Error("Unauthorized");
+  return prisma.album.update({
+    where: {
+      id,
+    },
+    data: {
+      isPublic: !album.isPublic,
+    },
+  });
+}
