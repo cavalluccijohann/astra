@@ -87,3 +87,18 @@ export async function getUserPhotos(userId: string) {
     },
   });
 }
+
+export async function putPhotoInAlbum(photoId: string, albumId: string) {
+  return prisma.photo.update({
+    where: {
+      id: photoId,
+    },
+    data: {
+      albums: {
+        connect: {
+          id: albumId,
+        },
+      },
+    },
+  });
+}
