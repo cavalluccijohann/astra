@@ -3,7 +3,7 @@ import {
     Image,
     View,
     Text,
-    RefreshControl, FlatList, TouchableOpacity,
+    TouchableOpacity,
     Modal, Button
 } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
@@ -28,7 +28,6 @@ export default function Photo() {
 
     const fetchDeletePhoto = async () => {
         try {
-            console.log('photo.id', photo.id);
             await $fetch('DELETE', `photo/${photo.id}`, JSON.stringify({deleteAlbum: false}));
             navigation.goBack();
         } catch (error) {
@@ -59,7 +58,6 @@ export default function Photo() {
 
     const fetchAddToAlbum = async () => {
         try {
-            console.log('selectedAlbum p', selectedAlbum);
             await $fetch('PUT', `photo/${photo.id}`, JSON.stringify({albumId: selectedAlbum}));
             handleModalAddingClose();
         } catch (error) {
@@ -72,29 +70,22 @@ export default function Photo() {
         fetchAddToAlbum().then(r => r);
     }
 
-
-    // Fonction pour afficher la modale
     const handleModalOpen = () => {
         setModalVisible(true);
     };
 
-    // Fonction pour fermer la modale
     const handleModalClose = () => {
         setModalVisible(false);
     };
 
-    // Fonction pour afficher la modale
     const handleModalAddingOpen = () => {
         setModalAddingVisible(true);
         fetchAlbums().then(r => r);
-
     };
 
-    // Fonction pour fermer la modale
     const handleModalAddingClose = () => {
         setModalAddingVisible(false);
     };
-
 
     const handleDeletePhoto = async () => {
         fetchDeletePhotoAlbum().then(r => r);
@@ -106,11 +97,9 @@ export default function Photo() {
 
     const handleAlbumSelection = (value) => {
         setSelectedAlbum(value);
-        console.log('selectedAlbum', photo.id);
     };
 
     useEffect(() => {
-
         }
         , []);
 

@@ -4,10 +4,7 @@ import {
     ScrollView,
     View,
     Text,
-    Modal,
-    Button,
     TouchableOpacity,
-    TextInput,
     RefreshControl
 } from 'react-native';
 import React, {useEffect, useState} from "react";
@@ -60,9 +57,9 @@ export default function Library() {
         }
     }
 
-    const handleAlbumPress = (albumId: string, albumName: string, isDefault: boolean) => {
+    const handleAlbumPress = (albumId: string, albumName: string, isDefault: boolean, album: never) => {
         // Fonction pour gérer le clic sur un album
-        navigation.navigate('Album', { albumId, albumName, isDefault });
+        navigation.navigate('Album', { albumId, albumName, isDefault, album });
     }
 
     const handleRefresh = () => {
@@ -72,12 +69,10 @@ export default function Library() {
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
-            // Code à exécuter lorsque le composant est affiché à nouveau
-            // ou que la page est focalisée à nouveau
             handleRefresh();
         });
 
-        return unsubscribe; // Nettoyage lors du démontage du composant
+        return unsubscribe;
     }, [navigation]);
 
     return (
@@ -89,7 +84,7 @@ export default function Library() {
             >
                 <List.Section className='flex flex-row flex-wrap justify-start px-3'>
                     {albums.map((album, index) => (
-                        <TouchableOpacity className='w-1/2 mx-0' key={index} onPress={() => handleAlbumPress(album.id, album.title, album.isDefault)}>
+                        <TouchableOpacity className='w-1/2 mx-0' key={index} onPress={() => handleAlbumPress(album.id, album.title, album.isDefault, album)}>
                             <View key={index} className='w-10/12 mx-0 mb-3'>
                                 {album.photos.length > 0 ? (
                                     <Image
@@ -118,8 +113,6 @@ export default function Library() {
                             />
                         </View>
                     </TouchableOpacity>
-
-
                 </List.Section>
                 <CreateAlbumModal
                     visible={modalVisible}
