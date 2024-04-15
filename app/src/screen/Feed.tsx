@@ -3,6 +3,7 @@ import {View, Image, Alert, RefreshControl, FlatList, TouchableOpacity, TextInpu
 import Header from '../component/Header';
 import {$fetch} from '../core/utils';
 import {useNavigation} from "@react-navigation/native";
+import Iconicons from "react-native-vector-icons/Ionicons";
 
 type Photo = {
     id: string;
@@ -47,6 +48,7 @@ export default function Feed() {
 
     const handleRefresh = () => {
         setLoading(true);
+        setSearchMeta('');
         fetchPublicAlbum().then(r => r);
     };
 
@@ -83,7 +85,7 @@ export default function Feed() {
         <View style={{flex: 1}}>
             <Header name='Feed'/>
             <View className="w-full bg-neutral-950">
-                <TextInput placeholder="Search" className="w-full h-12 bg-white text-neutral-100 px-4" onChangeText={handleSearchMeta} value={searchMeta}/>
+                <TextInput placeholder="Search ..." className="w-full h-12 bg-white px-4 text-neutral-500 font-bold" onChangeText={handleSearchMeta} value={searchMeta}/>
             </View>
             <FlatList
                 data={photos}
