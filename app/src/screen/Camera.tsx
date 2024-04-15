@@ -1,27 +1,53 @@
-import { Text, View, TouchableOpacity, Alert, ImageBackground } from 'react-native'
+import { Alert, ImageBackground, Text, TouchableOpacity, View } from 'react-native'
 import { $fetch } from "../core/utils";
 import { Camera } from 'expo-camera'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Slider from '@react-native-community/slider';
+import * as Location from 'expo-location';
 
 let camera: Camera
 export default function App() {
-  const [previewVisible, setPreviewVisible] = React.useState(false)
-  const [capturedImage, setCapturedImage] = React.useState<any>(null)
-  const [cameraType, setCameraType] = React.useState(Camera.Constants.Type.back)
-  const [flashMode, setFlashMode] = React.useState('off')
-  const [zoom, setZoom] = React.useState(0)
-  const [loading, setLoading] = React.useState(false)
+  const [previewVisible, setPreviewVisible] = useState(false)
+  const [capturedImage, setCapturedImage] = useState<any>(null)
+  const [cameraType, setCameraType] = useState(Camera.Constants.Type.back)
+  const [flashMode, setFlashMode] = useState('off')
+  const [zoom, setZoom] = useState(0)
+  const [loading, setLoading] = useState(false)
+  const [locationAddress, setLocationAddress] = useState('');
 
   useEffect(() => {
-    Camera.requestCameraPermissionsAsync().then(r => r)
+    let isMounted = true;
+    (async () => {
+      await Camera.requestCameraPermissionsAsync();
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permission to access location was denied');
+        return;
+      }
+
+      const location = await Location.getCurrentPositionAsync({});
+      const addresses = await Location.reverseGeocodeAsync({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      });
+
+      const city = addresses[0]?.city;
+      const country = addresses[0]?.country;
+      const readableAddress = `${addresses[0]?.name}, ${city}, ${country}`;
+      if (isMounted) setLocationAddress(readableAddress);
+    })();
+
+    return () => { isMounted = false };
   }, []);
 
   const __takePicture = async () => {
-    const photo: any = await camera.takePictureAsync({ exif: true })
-    setPreviewVisible(true)
-    setCapturedImage(photo)
-  }
+    const photo = await camera.takePictureAsync({ exif: true });
+    photo.exif.location = locationAddress;
+
+    setPreviewVisible(true);
+    setCapturedImage(photo);
+  };
+
   const __savePhoto = async () => {
     setLoading(true)
     const images = new FormData();
@@ -32,7 +58,6 @@ export default function App() {
       name: `photo-${ Date.now() }.jpg`,
       blobValue: capturedImage
     });
-    capturedImage.exif.location = 'Unknown';
     const exifData = JSON.stringify(capturedImage.exif);
     images.append('exif', exifData);
     try {
@@ -139,6 +164,7 @@ const CameraPreview = ({photo, retakePicture, savePhoto, loading}: any) => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={ savePhoto }
+              disabled={ loading }
               className='px-3 py-2 rounded-md flex items-center justify-center bg-blue-500'
             >
               { loading ? (
