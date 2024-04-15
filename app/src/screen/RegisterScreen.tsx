@@ -1,24 +1,19 @@
-import React, { memo, useState } from 'react';
-import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
-import Background from '../component/Background';
+import React, {memo, useState} from 'react';
+import {TouchableOpacity, Text, View, KeyboardAvoidingView} from 'react-native';
 import Logo from '../component/Logo';
-import Header from '../component/Header';
-import Button from '../component/Button';
 import TextInput from '../component/TextInput';
-import BackButton from '../component/BackButton';
-import { theme } from '../core/theme';
-import { emailValidator, passwordValidator } from '../core/utils';
-import { Navigation } from '../types';
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import {emailValidator, passwordValidator} from '../core/utils';
+import {Navigation} from '../types';
+import Iconicons from "react-native-vector-icons/Ionicons";
 
 type Props = {
     navigation: Navigation;
 };
 
-const RegisterScreen = ({ navigation }: Props) => {
-    const [email, setEmail] = useState({ value: '', error: '' });
-    const [password, setPassword] = useState({ value: '', error: '' });
-    const [userName, setUserName] = useState({ value: '', error: '' });
+const RegisterScreen = ({navigation}: Props) => {
+    const [email, setEmail] = useState({value: '', error: ''});
+    const [password, setPassword] = useState({value: '', error: ''});
+    const [userName, setUserName] = useState({value: '', error: ''});
 
     const _onRegisterPressed = async () => {
         const emailError = emailValidator(email.value);
@@ -26,13 +21,11 @@ const RegisterScreen = ({ navigation }: Props) => {
         const userNameError = passwordValidator(userName.value);
 
         if (emailError || passwordError || userNameError) {
-            setEmail({ ...email, error: emailError });
-            setPassword({ ...password, error: passwordError });
-            setUserName({ ...userName, error: userNameError });
+            setEmail({...email, error: emailError});
+            setPassword({...password, error: passwordError});
+            setUserName({...userName, error: userNameError});
             return;
         }
-
-        console.log(email, password, userName);
 
         try {
             const response = await fetch('https://api.astra.hrcd.fr/auth/register', {
@@ -40,7 +33,7 @@ const RegisterScreen = ({ navigation }: Props) => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ email: email.value, password: password.value, username: userName.value })
+                body: JSON.stringify({email: email.value, password: password.value, username: userName.value})
             });
 
             const data = await response.json();
@@ -62,49 +55,71 @@ const RegisterScreen = ({ navigation }: Props) => {
     };
 
     return (
-        <Background>
-            <BackButton goBack={() => navigation.navigate('Login')} />
-            <Logo />
-            <Header>Welcome.</Header>
+        <KeyboardAvoidingView className="flex-1" behavior="padding">
+            <View className="flex-1 justify-center items-center">
+                <TouchableOpacity onPress={() => navigation.navigate('Login')} className="absolute top-16 left-2 z-20">
+                    <Text className='text-white pl-5'>
+                        <Iconicons name={'arrow-back'} size={40} color={'white'}/>
+                    </Text>
+                </TouchableOpacity>
+                <View className="bg-neutral-950 w-full h-screen flex justify-center items-center">
+                    <Logo/>
+                    <View className="flex items-center justify-center w-full">
+                        <Text className="text-white text-2xl font-bold my-5">Welcome.</Text>
+                        <TextInput
+                            label="Email"
+                            returnKeyType="next"
+                            value={email.value}
+                            onChangeText={text => setEmail({value: text, error: ''})}
+                            error={!!email.error}
+                            errorText={email.error}
+                            autoCapitalize="none"
+                            autoCompleteType="email"
+                            textContentType="emailAddress"
+                            keyboardType="email-address"
+                            className="mx-11 w-3/4"
+                            cursorColor="white"
+                            outlineColor="white"
+                            activeOutlineColor="grey"
+                            selectionColor="grey"
+                        />
+                        <TextInput
+                            label="Username"
+                            returnKeyType="next"
+                            value={userName.value}
+                            onChangeText={text => setUserName({value: text, error: ''})}
+                            error={!!userName.error}
+                            errorText={userName.error}
+                            autoCapitalize="none"
+                            className="mx-11 w-3/4"
+                            cursorColor="white"
+                            outlineColor="white"
+                            activeOutlineColor="grey"
+                            selectionColor="grey"
+                        ></TextInput>
+                        <TextInput
+                            label="Password"
+                            returnKeyType="done"
+                            value={password.value}
+                            onChangeText={text => setPassword({value: text, error: ''})}
+                            error={!!password.error}
+                            errorText={password.error}
+                            secureTextEntry
+                            className="mx-11 w-3/4"
+                            cursorColor="white"
+                            outlineColor="white"
+                            activeOutlineColor="grey"
+                            selectionColor="grey"
+                        />
+                        <TouchableOpacity onPress={_onRegisterPressed}
+                                          className="bg-neutral-400 w-3/4 h-12 flex items-center justify-center rounded-md my-5">
+                            <Text className="text-white text-xl font-bold">Register</Text>
+                        </TouchableOpacity>
+                    </View>
 
-            <TextInput
-                label="Email"
-                returnKeyType="next"
-                value={email.value}
-                onChangeText={text => setEmail({ value: text, error: '' })}
-                error={!!email.error}
-                errorText={email.error}
-                autoCapitalize="none"
-                autoCompleteType="email"
-                textContentType="emailAddress"
-                keyboardType="email-address"
-            />
-
-            <TextInput
-                label="Username"
-                returnKeyType="next"
-                value={userName.value}
-                onChangeText={text => setUserName({ value: text, error: '' })}
-                error={!!userName.error}
-                errorText={userName.error}
-                autoCapitalize="none"
-            />
-
-            <TextInput
-                label="Password"
-                returnKeyType="done"
-                value={password.value}
-                onChangeText={text => setPassword({ value: text, error: '' })}
-                error={!!password.error}
-                errorText={password.error}
-                secureTextEntry
-            />
-
-            <Button mode="contained" onPress={_onRegisterPressed}>
-                Register
-            </Button>
-
-        </Background>
+                </View>
+            </View>
+        </KeyboardAvoidingView>
     );
 };
 
