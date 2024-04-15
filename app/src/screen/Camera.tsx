@@ -32,6 +32,7 @@ export default function App() {
       name: `photo-${ Date.now() }.jpg`,
       blobValue: capturedImage
     });
+    capturedImage.exif.location = 'Unknown';
     const exifData = JSON.stringify(capturedImage.exif);
     images.append('exif', exifData);
     try {
