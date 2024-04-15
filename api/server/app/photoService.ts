@@ -131,3 +131,50 @@ export async function putPhotoInAlbum(photoId: string, albumId: string) {
     },
   });
 }
+
+export async function searchPhotos(search: string) {
+  const publicAlbums = await prisma.album.findMany({
+    where: {
+      isPublic: true,
+    },
+    include: {
+      photos: {
+        where: {
+          OR: [
+            {
+              name: {
+                contains: search,
+                mode: "insensitive",
+              },
+            },
+            {
+              camera: {
+                contains: search,
+                mode: "insensitive",
+              },
+            },
+            {
+              location: {
+                contains: search,
+                mode: "insensitive",
+              },
+            },
+            {
+              brandCamera: {
+                contains: search,
+                mode: "insensitive",
+              },
+            },
+            {
+              type: {
+                contains: search,
+                mode: "insensitive",
+              },
+            },
+          ],
+        },
+      },
+    },
+  });
+  return publicAlbums.flatMap((album) => album.photos);
+}
