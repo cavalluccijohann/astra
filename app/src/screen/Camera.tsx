@@ -1,53 +1,27 @@
-import { Alert, ImageBackground, Text, TouchableOpacity, View } from 'react-native'
+import { Text, View, TouchableOpacity, Alert, ImageBackground } from 'react-native'
 import { $fetch } from "../core/utils";
 import { Camera } from 'expo-camera'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect } from 'react'
 import Slider from '@react-native-community/slider';
-import * as Location from 'expo-location';
 
 let camera: Camera
 export default function App() {
-  const [previewVisible, setPreviewVisible] = useState(false)
-  const [capturedImage, setCapturedImage] = useState<any>(null)
-  const [cameraType, setCameraType] = useState(Camera.Constants.Type.back)
-  const [flashMode, setFlashMode] = useState('off')
-  const [zoom, setZoom] = useState(0)
-  const [loading, setLoading] = useState(false)
-  const [locationAddress, setLocationAddress] = useState('');
+  const [previewVisible, setPreviewVisible] = React.useState(false)
+  const [capturedImage, setCapturedImage] = React.useState<any>(null)
+  const [cameraType, setCameraType] = React.useState(Camera.Constants.Type.back)
+  const [flashMode, setFlashMode] = React.useState('off')
+  const [zoom, setZoom] = React.useState(0)
+  const [loading, setLoading] = React.useState(false)
 
   useEffect(() => {
-    let isMounted = true;
-    (async () => {
-      await Camera.requestCameraPermissionsAsync();
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        Alert.alert('Permission to access location was denied');
-        return;
-      }
-
-      const location = await Location.getCurrentPositionAsync({});
-      const addresses = await Location.reverseGeocodeAsync({
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-      });
-
-      const city = addresses[0]?.city;
-      const country = addresses[0]?.country;
-      const readableAddress = `${addresses[0]?.name}, ${city}, ${country}`;
-      if (isMounted) setLocationAddress(readableAddress);
-    })();
-
-    return () => { isMounted = false };
+    Camera.requestCameraPermissionsAsync().then(r => r)
   }, []);
 
   const __takePicture = async () => {
-    const photo = await camera.takePictureAsync({ exif: true });
-    photo.exif.location = locationAddress;
-
-    setPreviewVisible(true);
-    setCapturedImage(photo);
-  };
-
+    const photo: any = await camera.takePictureAsync({ exif: true })
+    setPreviewVisible(true)
+    setCapturedImage(photo)
+  }
   const __savePhoto = async () => {
     setLoading(true)
     const images = new FormData();
@@ -58,6 +32,7 @@ export default function App() {
       name: `photo-${ Date.now() }.jpg`,
       blobValue: capturedImage
     });
+    capturedImage.exif.location = 'Unknown';
     const exifData = JSON.stringify(capturedImage.exif);
     images.append('exif', exifData);
     try {
@@ -125,15 +100,17 @@ export default function App() {
                   <Text className='text-sm text-white'>Switch</Text>
                 </TouchableOpacity>
               </View>
-              <View className='absolute bottom-0 w-full flex flex-row justify-between px-4 mb-4'>
+              <View className='absolute right-[-60px] bottom-28 z-20'>
                 <Slider
-                  style={{ width: 200, height: 40 }}
-                  minimumValue={0}
-                  maximumValue={0.08}
-                  minimumTrackTintColor="#FFFFFF"
-                  maximumTrackTintColor="#000000"
-                  onValueChange={setZoom}
+                    style={{ width: 200, height: 40, transform: [{ rotate: '-90deg' }] }}
+                    minimumValue={0}
+                    maximumValue={0.08}
+                    minimumTrackTintColor="#FFFFFF"
+                    maximumTrackTintColor="#000000"
+                    onValueChange={setZoom}
                 />
+              </View>
+              <View className='absolute bottom-0 w-full flex flex-row justify-between px-4 mb-4'>
                 <View className='flex-1 flex justify-center items-center'>
                   <TouchableOpacity onPress={ __takePicture }
                                     className='bg-gray-900 w-20 h-20 rounded-full flex items-center justify-center'
@@ -151,30 +128,30 @@ export default function App() {
 }
 
 const CameraPreview = ({photo, retakePicture, savePhoto, loading}: any) => {
-    return (
-        <View className='flex-1 w-full bg-transparent flex flex-col justify-between'>
-            <ImageBackground source={{uri: photo && photo.uri}} className='flex-1'>
-                <View className='flex-1 flex flex-row justify-between items-end'>
-                    <View className='flex-1 flex flex-row justify-between items-end px-4 pb-4'>
-                        <TouchableOpacity
-                            onPress={retakePicture}
-                            className='bg-gray-900 px-3 py-2 rounded-md flex items-center justify-center'
-                        >
-                            <Text className='text-white'>Re-take</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={savePhoto}
-                            className='px-3 py-2 rounded-md flex items-center justify-center bg-blue-500'
-                        >
-                            {loading ? (
-                                <Text className='text-white'>Saving...</Text>
-                            ) : (
-                                <Text className='text-white'>Save</Text>
-                            )}
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </ImageBackground>
+  return (
+    <View className='flex-1 w-full bg-transparent flex flex-col justify-between'>
+      <ImageBackground source={ {uri: photo && photo.uri} } className='flex-1'>
+        <View className='flex-1 flex flex-row justify-between items-end'>
+          <View className='flex-1 flex flex-row justify-between items-end px-4 pb-4'>
+            <TouchableOpacity
+              onPress={ retakePicture }
+              className='bg-gray-900 px-3 py-2 rounded-md flex items-center justify-center'
+            >
+              <Text className='text-white'>Re-take</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={ savePhoto }
+              className='px-3 py-2 rounded-md flex items-center justify-center bg-blue-500'
+            >
+              { loading ? (
+                <Text className='text-white'>Saving...</Text>
+              ) : (
+                <Text className='text-white'>Save</Text>
+              )}
+            </TouchableOpacity>
+          </View>
         </View>
-    )
+      </ImageBackground>
+    </View>
+  )
 }
