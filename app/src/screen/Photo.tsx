@@ -4,7 +4,7 @@ import {
     View,
     Text,
     TouchableOpacity,
-    Modal, Button
+    Modal, Button, ScrollView, RefreshControl
 } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import React, {useEffect, useState} from "react";
@@ -125,9 +125,24 @@ export default function Photo() {
                 </View>
             </View>
 
-            <View className='flex-1 justify-center items-center bg-neutral-950'>
-                <Image source={{uri: photo.url}} className='w-full h-1/2'/>
-            </View>
+            <ScrollView
+                className='flex-1'
+            >
+                <View className='flex-1 justify-start items-center bg-neutral-950 h-screen'>
+                    <Image source={{uri: photo.url}} className='w-full h-1/2 mt-32'/>
+                </View>
+                <View className='flex-1 justify-start items-start bg-neutral-950 mb-2'>
+                    {/*Separator*/}
+                    <View className='bg-white h-[1px] w-full'/>
+                </View>
+                <View className='flex-1 justify-start items-start bg-neutral-950 mb-16'>
+                    <Text className='text-white text-3xl pb-2'>Informations about the photo</Text>
+                    <Text className='text-white text-xl py-2'>{new Date(photo.date).toLocaleDateString()}</Text>
+                    <Text className='text-white text-xl py-2'>{photo.location != "Unknown" && photo.location ? (photo.location) : 'Pas de localisation'}</Text>
+                    <Text className='text-white text-xl py-2'>{photo.brandCamera != "Unknown" && photo.brandCamera ? (photo.brandCamera) : 'Pas de marque'}</Text>
+                    <Text className='text-white text-xl py-2'>{photo.camera != "Unknown" && photo.camera ? (photo.camera) : 'Pas de camera'}</Text>
+                </View>
+            </ScrollView>
 
             <Modal
                 animationType="slide"
@@ -178,5 +193,6 @@ export default function Photo() {
                 </View>
             </Modal>
         </View>
-    );
+    )
+        ;
 }
