@@ -1,131 +1,153 @@
-import {Text, View, TouchableOpacity, Alert, ImageBackground} from 'react-native'
-import {$fetch} from "../core/utils";
-import {Camera} from 'expo-camera'
-import React, {useEffect} from 'react'
+import { Alert, ImageBackground, Text, TouchableOpacity, View } from 'react-native'
+import { $fetch } from "../core/utils";
+import { Camera } from 'expo-camera'
+import React, { useEffect, useRef, useState } from 'react'
 import Slider from '@react-native-community/slider';
+import * as Location from 'expo-location';
 
 let camera: Camera
 export default function App() {
-    const [previewVisible, setPreviewVisible] = React.useState(false)
-    const [capturedImage, setCapturedImage] = React.useState<any>(null)
-    const [cameraType, setCameraType] = React.useState(Camera.Constants.Type.back)
-    const [flashMode, setFlashMode] = React.useState('off')
-    const [zoom, setZoom] = React.useState(0)
-    const [loading, setLoading] = React.useState(false)
+  const [previewVisible, setPreviewVisible] = useState(false)
+  const [capturedImage, setCapturedImage] = useState<any>(null)
+  const [cameraType, setCameraType] = useState(Camera.Constants.Type.back)
+  const [flashMode, setFlashMode] = useState('off')
+  const [zoom, setZoom] = useState(0)
+  const [loading, setLoading] = useState(false)
+  const [locationAddress, setLocationAddress] = useState('');
 
-    useEffect(() => {
-        Camera.requestCameraPermissionsAsync().then(r => r)
-    }, []);
+  useEffect(() => {
+    let isMounted = true;
+    (async () => {
+      await Camera.requestCameraPermissionsAsync();
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permission to access location was denied');
+        return;
+      }
 
-    const __takePicture = async () => {
-        const photo: any = await camera.takePictureAsync({exif: true})
-        setPreviewVisible(true)
-        setCapturedImage(photo)
+      const location = await Location.getCurrentPositionAsync({});
+      const addresses = await Location.reverseGeocodeAsync({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      });
+
+      const city = addresses[0]?.city;
+      const country = addresses[0]?.country;
+      const readableAddress = `${addresses[0]?.name}, ${city}, ${country}`;
+      if (isMounted) setLocationAddress(readableAddress);
+    })();
+
+    return () => { isMounted = false };
+  }, []);
+
+  const __takePicture = async () => {
+    const photo = await camera.takePictureAsync({ exif: true });
+    photo.exif.location = locationAddress;
+
+    setPreviewVisible(true);
+    setCapturedImage(photo);
+  };
+
+  const __savePhoto = async () => {
+    setLoading(true)
+    const images = new FormData();
+    images.append('images', {
+      uri: capturedImage.uri,
+      arrayBuffer: capturedImage.arrayBuffer,
+      type: 'image/jpeg',
+      name: `photo-${ Date.now() }.jpg`,
+      blobValue: capturedImage
+    });
+    const exifData = JSON.stringify(capturedImage.exif);
+    images.append('exif', exifData);
+    try {
+      await $fetch('POST', 'photo', images);
+      Alert.alert('Photo saved');
+      __retakePicture();
+    } catch (error) {
+      console.error('Error saving photo:', error);
+      Alert.alert('Error saving photo')
     }
-    const __savePhoto = async () => {
-        setLoading(true)
-        const images = new FormData();
-        images.append('images', {
-            uri: capturedImage.uri,
-            arrayBuffer: capturedImage.arrayBuffer,
-            type: 'image/jpeg',
-            name: `photo-${Date.now()}.jpg`,
-            blobValue: capturedImage
-        });
-        capturedImage.exif.location = 'Unknown';
-        const exifData = JSON.stringify(capturedImage.exif);
-        images.append('exif', exifData);
-        try {
-            await $fetch('POST', 'photo', images);
-            Alert.alert('Photo saved');
-            __retakePicture();
-        } catch (error) {
-            console.error('Error saving photo:', error);
-            Alert.alert('Error saving photo')
-        }
-        setLoading(false)
+    setLoading(false)
+  }
+  const __retakePicture = () => {
+    setCapturedImage(null)
+    setPreviewVisible(false)
+  }
+  const __handleFlashMode = () => {
+    if (flashMode === 'on') {
+      setFlashMode('off')
+    } else if (flashMode === 'off') {
+      setFlashMode('on')
+    } else {
+      setFlashMode('auto')
     }
-    const __retakePicture = () => {
-        setCapturedImage(null)
-        setPreviewVisible(false)
+  }
+  const __switchCamera = () => {
+    if (cameraType === 'back') {
+      setCameraType('front')
+    } else {
+      setCameraType('back')
     }
-    const __handleFlashMode = () => {
-        if (flashMode === 'on') {
-            setFlashMode('off')
-        } else if (flashMode === 'off') {
-            setFlashMode('on')
-        } else {
-            setFlashMode('auto')
-        }
-    }
-    const __switchCamera = () => {
-        if (cameraType === 'back') {
-            setCameraType('front')
-        } else {
-            setCameraType('back')
-        }
-    }
-    return (
-        <View className='flex-1'>
-            <View className='flex-1 w-full'>
-                {previewVisible && capturedImage ? (
-                    <CameraPreview photo={capturedImage} savePhoto={__savePhoto} retakePicture={__retakePicture}
-                                   loading={loading}/>
-                ) : (
-                    <Camera
-                        type={cameraType}
-                        flashMode={flashMode}
-                        autoFocus="on"
-                        className='flex-1'
-                        zoom={zoom}
-                        ref={(r) => {
-                            camera = r
-                        }}
-                    >
-                        <View className='flex-1 w-full bg-transparent flex flex-row'>
-                            <View
-                                className='absolute left-5 top-20 flex flex-col gap-4 justify-between'
-                            >
-                                <TouchableOpacity onPress={__handleFlashMode}
-                                                  className={
-                                                      flashMode === 'off' ?
-                                                          'bg-gray-900 px-2 py-1 rounded-md flex items-center justify-center' :
-                                                          'bg-yellow-400 px-2 py-1 rounded-md flex items-center justify-center'
-                                                  }
-                                >
-                                    <Text className='text-sm text-white'>Flash</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={__switchCamera}
-                                                  className={'bg-gray-900 px-2 py-1 rounded-md flex items-center justify-center'}
-                                >
-                                    <Text className='text-sm text-white'>Switch</Text>
-                                </TouchableOpacity>
-                            </View>
-                            <View className='absolute right-[-70px] bottom-28 z-20'>
-                                <Slider
-                                    style={{width: 200, height: 40, transform: [{rotate: '-90deg'}]}}
-                                    minimumValue={0}
-                                    maximumValue={0.08}
-                                    minimumTrackTintColor="#FFFFFF"
-                                    maximumTrackTintColor="#000000"
-                                    onValueChange={setZoom}
-                                />
-                            </View>
-                            <View className='absolute bottom-0 w-full flex flex-row justify-between px-4 mb-4'>
-                                <View className='flex-1 flex justify-center items-center'>
-                                    <TouchableOpacity onPress={__takePicture}
-                                                      className='bg-gray-900 w-20 h-20 rounded-full flex items-center justify-center'
-                                    >
-                                        <View className='bg-white w-16 h-16 rounded-full'/>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                        </View>
-                    </Camera>
-                )}
+  }
+  return (
+    <View className='flex-1'>
+      <View className='flex-1 w-full'>
+        { previewVisible && capturedImage ? (
+          <CameraPreview photo={ capturedImage } savePhoto={ __savePhoto } retakePicture={ __retakePicture } loading={ loading } />
+        ) : (
+          <Camera
+            type={ cameraType }
+            flashMode={ flashMode }
+            autoFocus="on"
+            className='flex-1'
+            zoom={ zoom }
+            ref={ (r) => {
+              camera = r
+            } }
+          >
+            <View className='flex-1 w-full bg-transparent flex flex-row'>
+              <View
+                className='absolute left-5 top-20 flex flex-col gap-4 justify-between'
+              >
+                <TouchableOpacity onPress={ __handleFlashMode }
+                                  className={
+                                    flashMode === 'off' ?
+                                      'bg-gray-900 px-2 py-1 rounded-md flex items-center justify-center' :
+                                      'bg-yellow-400 px-2 py-1 rounded-md flex items-center justify-center'
+                                  }
+                >
+                  <Text className='text-sm text-white'>Flash</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={ __switchCamera }
+                                  className={ 'bg-gray-900 px-2 py-1 rounded-md flex items-center justify-center' }
+                >
+                  <Text className='text-sm text-white'>Switch</Text>
+                </TouchableOpacity>
+              </View>
+              <View className='absolute bottom-0 w-full flex flex-row justify-between px-4 mb-4'>
+                <Slider
+                  style={{ width: 200, height: 40 }}
+                  minimumValue={0}
+                  maximumValue={0.08}
+                  minimumTrackTintColor="#FFFFFF"
+                  maximumTrackTintColor="#000000"
+                  onValueChange={setZoom}
+                />
+                <View className='flex-1 flex justify-center items-center'>
+                  <TouchableOpacity onPress={ __takePicture }
+                                    className='bg-gray-900 w-20 h-20 rounded-full flex items-center justify-center'
+                  >
+                    <View className='bg-white w-16 h-16 rounded-full' />
+                  </TouchableOpacity>
+                </View>
+              </View>
             </View>
-        </View>
-    )
+          </Camera>
+        ) }
+      </View>
+    </View>
+  )
 }
 
 const CameraPreview = ({photo, retakePicture, savePhoto, loading}: any) => {
