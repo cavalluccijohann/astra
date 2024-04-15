@@ -27,9 +27,9 @@ export async function uploadPhoto(user: User, image: File, exif: any) {
       name: image.name,
       type: image.type,
       url: `${publicUrl}${user.id}/${image.name}`,
-      camera: exif?.lensModel || exif?.model || "Unknown",
+      camera: exif?.LensModel || "Unknown",
       location: exif?.location || "Unknown",
-      brandCamera: exif?.lensMake || "Unknown",
+      brandCamera: exif?.LensMake || "Unknown",
       albums: {
         connect: {
           id: album.id,
