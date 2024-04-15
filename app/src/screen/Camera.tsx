@@ -2,6 +2,7 @@ import { Text, View, TouchableOpacity, Alert, ImageBackground } from 'react-nati
 import { $fetch } from "../core/utils";
 import { Camera } from 'expo-camera'
 import React, { useEffect } from 'react'
+import Slider from '@react-native-community/slider';
 
 let camera: Camera
 export default function App() {
@@ -9,6 +10,7 @@ export default function App() {
   const [capturedImage, setCapturedImage] = React.useState<any>(null)
   const [cameraType, setCameraType] = React.useState(Camera.Constants.Type.back)
   const [flashMode, setFlashMode] = React.useState('off')
+  const [zoom, setZoom] = React.useState(0)
   const [loading, setLoading] = React.useState(false)
 
   useEffect(() => {
@@ -16,7 +18,7 @@ export default function App() {
   }, []);
 
   const __takePicture = async () => {
-    const photo: any = await camera.takePictureAsync()
+    const photo: any = await camera.takePictureAsync({ exif: true })
     setPreviewVisible(true)
     setCapturedImage(photo)
   }
@@ -30,6 +32,8 @@ export default function App() {
       name: `photo-${ Date.now() }.jpg`,
       blobValue: capturedImage
     });
+    const exifData = JSON.stringify(capturedImage.exif);
+    images.append('exif', exifData);
     try {
       await $fetch('POST', 'photo', images);
       Alert.alert('Photo saved');
@@ -71,6 +75,7 @@ export default function App() {
             flashMode={ flashMode }
             autoFocus="on"
             className='flex-1'
+            zoom={ zoom }
             ref={ (r) => {
               camera = r
             } }
@@ -95,6 +100,14 @@ export default function App() {
                 </TouchableOpacity>
               </View>
               <View className='absolute bottom-0 w-full flex flex-row justify-between px-4 mb-4'>
+                <Slider
+                  style={{ width: 200, height: 40 }}
+                  minimumValue={0}
+                  maximumValue={0.08}
+                  minimumTrackTintColor="#FFFFFF"
+                  maximumTrackTintColor="#000000"
+                  onValueChange={setZoom}
+                />
                 <View className='flex-1 flex justify-center items-center'>
                   <TouchableOpacity onPress={ __takePicture }
                                     className='bg-gray-900 w-20 h-20 rounded-full flex items-center justify-center'

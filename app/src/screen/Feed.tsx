@@ -24,8 +24,8 @@ export default function Feed() {
             const data = await $fetch<{ content: Photo[] }>('GET', 'album');
             setPhotos(data.content);
         } catch (error) {
-            console.log('Error fetching user library:', error);
-            Alert.alert('Error fetching user library');
+            console.error(error);
+            Alert.alert('Error fetching feed');
         } finally {
             setLoading(false);
         }

@@ -3,9 +3,11 @@
     "plugins": [
       [
         "expo-camera",
+        "expo-location",
         {
           "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
           "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location.",
           "recordAudioAndroid": true
         }
       ]

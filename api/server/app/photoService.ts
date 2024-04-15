@@ -6,7 +6,7 @@ import prisma from "../client";
 
 const runtimeConfig = useRuntimeConfig();
 
-export async function uploadPhoto(user: User, image: File) {
+export async function uploadPhoto(user: User, image: File, exif: any) {
   const album = await prisma.album.findFirst({
     where: {
       userId: user.id,
@@ -27,6 +27,9 @@ export async function uploadPhoto(user: User, image: File) {
       name: image.name,
       type: image.type,
       url: `${publicUrl}${user.id}/${image.name}`,
+      camera: exif?.lensModel || exif?.model || "Unknown",
+      location: exif?.location || "Unknown",
+      brandCamera: exif?.lensMake || "Unknown",
       albums: {
         connect: {
           id: album.id,

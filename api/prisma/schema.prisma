@@ -31,14 +31,15 @@ model Album {
 }
 
 model Photo {
-  id       String   @id @default(uuid())
-  name     String
-  url      String
-  userId   String
-  type     String
-  camera   String?
-  date     DateTime @default(now())
-  location String?
-  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  albums   Album[]  @relation("AlbumToPhoto")
+  id          String   @id @default(uuid())
+  name        String
+  url         String
+  userId      String
+  type        String
+  camera      String?
+  location    String?
+  brandCamera String?
+  date        DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  albums      Album[]  @relation("AlbumToPhoto")
 }
