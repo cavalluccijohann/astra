@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { View, Image, Alert, RefreshControl, FlatList } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, Image, Alert, RefreshControl, FlatList, TouchableOpacity} from 'react-native';
 import Header from '../component/Header';
-import { $fetch } from '../core/utils';
+import {$fetch} from '../core/utils';
+import {useNavigation} from "@react-navigation/native";
 
 type Photo = {
     id: string;
@@ -18,6 +19,8 @@ type Album = {
 export default function Feed() {
     const [photos, setPhotos] = useState<Photo[]>([]);
     const [loading, setLoading] = useState(true);
+    const navigation = useNavigation();
+
 
     const fetchPublicAlbum = async () => {
         try {
@@ -40,18 +43,24 @@ export default function Feed() {
         fetchPublicAlbum().then(r => r);
     };
 
+    const handlePhotoPress = (photo: Photo) => {
+        navigation.navigate('Photo', {photo, isDefault: false, albumId: ''});
+    };
+
     return (
-      <View style={{ flex: 1 }}>
-          <Header name='Feed' />
-          <FlatList
-            data={photos}
-            keyExtractor={(item) => item.id}
-            numColumns={2}
-            renderItem={({ item }) => (
-              <Image source={{ uri: item.url }} style={{ flex: 1, aspectRatio: 1 }} />
-            )}
-            refreshControl={<RefreshControl refreshing={loading} onRefresh={handleRefresh} />}
-          />
-      </View>
+        <View style={{flex: 1}}>
+            <Header name='Feed'/>
+            <FlatList
+                data={photos}
+                keyExtractor={(item) => item.id}
+                numColumns={2}
+                renderItem={({item}) => (
+                    <TouchableOpacity style={{flex: 1, aspectRatio: 1}} onPress={() => handlePhotoPress(item)}>
+                        <Image source={{uri: item.url}} style={{flex: 1, aspectRatio: 1}}/>
+                    </TouchableOpacity>
+                )}
+                refreshControl={<RefreshControl refreshing={loading} onRefresh={handleRefresh}/>}
+            />
+        </View>
     );
 }

@@ -112,6 +112,7 @@ export default function Photo() {
                         <Iconicons name={'arrow-back'} size={30} color={'white'}/>
                     </Text>
                 </TouchableOpacity>
+                {albumId != '' ? (
                 <View className='flex-1 flex-row justify-end items-end'>
                     {isDefault ? (
                         <TouchableOpacity className='pr-5' onPress={handleModalAddingOpen}>
@@ -123,6 +124,7 @@ export default function Photo() {
                         <Iconicons name={'ellipsis-horizontal'} size={30} color={'white'}/>
                     </TouchableOpacity>
                 </View>
+                    ) : null}
             </View>
 
             <ScrollView
