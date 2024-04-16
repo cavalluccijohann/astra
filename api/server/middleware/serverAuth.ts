@@ -12,6 +12,10 @@ export default defineEventHandler(async (event: H3Event) => {
     return;
   }
 
+  if (event.path === "/album" && event.method === "GET") {
+    return;
+  }
+
   const authHeader = event.headers.get("Authorization");
   if (!authHeader) return null;
   const authToken = authHeader.split(" ")[1];
