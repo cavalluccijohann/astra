@@ -1,5 +1,6 @@
 {
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "nitro build",
     "dev": "nitro dev",
@@ -8,13 +9,17 @@
     "prisma:generate": "prisma generate",
     "prisma:push": "prisma db push && prisma generate",
     "prisma:pull": "prisma db pull",
-    "postinstall": "npm run prisma:generate"
+    "postinstall": "npm run prisma:generate",
+    "test": "vitest run",
+    "test:watch": "vitest watch"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.6",
+    "nitro-test-utils": "^0.4.3",
     "nitropack": "latest",
-    "prisma": "^5.0.0"
+    "prisma": "^5.0.0",
+    "vitest": "^1.5.0"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.536.0",
