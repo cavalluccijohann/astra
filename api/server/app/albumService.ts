@@ -117,7 +117,7 @@ export const getUserAlbums = defineCachedFunction(async (user: User) => {
 }, {
   maxAge: 60 * 60,
   name: 'getUserAlbums',
-  getKey: (user: User) => `getUserAlbums:${user.id}`,
+  getKey: (user: User) => `${user.id}`,
 });
 
 export async function deleteUserAlbums(user: User) {
