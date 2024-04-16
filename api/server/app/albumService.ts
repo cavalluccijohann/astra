@@ -6,6 +6,9 @@ import prisma from "../client";
 const runtimeConfig = useRuntimeConfig();
 
 export async function createAlbum(user: User, name: string, isPublic: boolean) {
+  if (isPublic)
+    await removeCachedFeed();
+  await removeCachedUserAlbums(user);
   const command = new aws.PutObjectCommand({
     Bucket: runtimeConfig.awsBucket,
     Key: `${user.id}/${name}/`,
@@ -45,6 +48,8 @@ export async function createUserDefaultAlbum(user: User) {
 }
 
 export async function deleteAlbum(user: User, id: string) {
+  await removeCachedFeed();
+  await removeCachedUserAlbums(user);
   const album = await prisma.album.findUnique({
     where: {
       id,
@@ -77,7 +82,7 @@ export async function getAlbum(user: User, id: string) {
   return album;
 }
 
-export async function getPublicAlbums() {
+export const getPublicAlbums = defineCachedFunction(async () => {
   const albums = await prisma.album.findMany({
     where: {
       isPublic: true,
@@ -94,9 +99,13 @@ export async function getPublicAlbums() {
     [photos[i], photos[j]] = [photos[j], photos[i]];
   }
   return photos;
-}
+}, {
+  maxAge: 60 * 60,
+  name: 'getPublicAlbums',
+  getKey: () => 'getPublicAlbums',
+});
 
-export async function getUserAlbums(user: User) {
+export const getUserAlbums = defineCachedFunction(async (user: User) => {
   return prisma.album.findMany({
     where: {
       userId: user.id,
@@ -104,10 +113,16 @@ export async function getUserAlbums(user: User) {
     include: {
       photos: true,
     }
-  });
-}
+  })
+}, {
+  maxAge: 60 * 60,
+  name: 'getUserAlbums',
+  getKey: (user: User) => `getUserAlbums:${user.id}`,
+});
 
 export async function deleteUserAlbums(user: User) {
+  await removeCachedFeed();
+  await removeCachedUserAlbums(user);
   const command = new aws.DeleteObjectCommand({
     Bucket: runtimeConfig.awsBucket,
     Key: `${user.id}/`,
@@ -121,6 +136,8 @@ export async function deleteUserAlbums(user: User) {
 }
 
 export async function toggleAlbumPrivacy(user: User, id: string) {
+  await removeCachedFeed();
+  await removeCachedUserAlbums(user);
   const album = await prisma.album.findUnique({
     where: {
       id,
@@ -136,4 +153,12 @@ export async function toggleAlbumPrivacy(user: User, id: string) {
       isPublic: !album.isPublic,
     },
   });
+}
+
+async function removeCachedFeed() {
+  return await useStorage('cache').removeItem(`nitro:functions:getPublicAlbums`);
+}
+
+async function removeCachedUserAlbums(user: User) {
+  return await useStorage('cache').removeItem(`nitro:functions:getUserAlbums:${user.id}`);
 }
