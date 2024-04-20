@@ -23,7 +23,7 @@ export const nameValidator = (name: string) => {
 
 export async function $fetch<T>(method: string, endpoint: string, body?: any): Promise<T> {
   const userToken = await AsyncStorage.getItem('authToken');
-  const url = `http://10.73.190.13:3000/${endpoint}`;
+  const url = `http://172.20.10.2:3000/${endpoint}`;
   const requestOptions = {
     method,
     headers: {
