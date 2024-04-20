@@ -9,6 +9,15 @@ services:
       - "3000:3000"
     env_file:
       - ./api/.env
+  app:
+    container_name: astra-app
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    ports:
+      - "19000:19000"
+      - "19001:19001"
+      - "19002:19002"
   db:
     container_name: astra-db
     image: mysql:latest

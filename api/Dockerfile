@@ -1,17 +1,17 @@
-FROM oven/bun
+FROM node:18.16.0
 
 WORKDIR /api
 
 COPY package*.json ./
 
-RUN bun install --force
+RUN npm install --force
 
 COPY . .
 
-RUN bunx prisma generate
+RUN npx prisma generate
 
 EXPOSE 3000
 
-RUN bun run build
+RUN npm run build
 
-CMD [ "bun", "run", "start" ]
+CMD [ "npm", "run", "start" ]
