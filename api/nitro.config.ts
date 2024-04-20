@@ -2,6 +2,10 @@
 export default defineNitroConfig({
   srcDir: "server",
 
+  experimental: {
+    openAPI: true,
+  },
+
   runtimeConfig: {
     authSecret: process.env.AUTH_SECRET,
     awsAccessKeyId: process.env.AWS_ACCESS_KEY_ID,

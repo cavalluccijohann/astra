@@ -1,3 +1,3 @@
 # Nitro starter
 
-Look at the [nitro quick start](https://nitro.unjs.io/guide#quick-start) to learn more how to get started.
+Open the documentation in your browser by visiting [http://localhost:3000/_nitro/scalar](http://localhost:3000/_nitro/scalar).

@@ -15,7 +15,7 @@ describe('Feed route', () => {
     const response = await $fetch('/album', {
       method: 'GET',
     })
-    
+
     expect(response.status).toBe(200)
   })
 })
