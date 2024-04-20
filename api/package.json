@@ -4,6 +4,7 @@
   "scripts": {
     "build": "nitro build",
     "dev": "nitro dev",
+    "start": "node .output/server/index.mjs",
     "prepare": "nitro prepare",
     "preview": "node .output/server/index.mjs",
     "prisma:generate": "prisma generate",
