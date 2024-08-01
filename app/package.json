@@ -18,7 +18,7 @@
     "expo-status-bar": "~1.12.0",
     "nativewind": "^2.0.11",
     "react": "18.3.1",
-    "react-native": "0.74.3",
+    "react-native": "0.74.4",
     "react-native-masonry-list": "^2.16.1",
     "react-native-picker-select": "^9.1.3",
     "react-native-vector-icons": "^10.0.3",
