@@ -17,7 +17,7 @@
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.6",
-    "nitro-test-utils": "^0.5.0",
+    "nitro-test-utils": "^0.7.0",
     "prisma": "^5.0.0",
     "vitest": "^2.0.0"
   },
