@@ -6033,9 +6033,9 @@ react-is@^18.0.0, react-is@^18.1.0:
   integrity sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==
 
 react-native-masonry-list@^2.16.1:
-  version "2.16.1"
-  resolved "https://registry.yarnpkg.com/react-native-masonry-list/-/react-native-masonry-list-2.16.1.tgz#111513018cb6f0b2a32fe7ca3243ed187dd41734"
-  integrity sha512-zELbfqZgWDkMnDPQep3okZkV3FayO+lWeVGKSYt8emjY7kmyU/ncm5o20lB2OaBmdHQWXDjeK/emzNa4cM9quA==
+  version "2.16.2"
+  resolved "https://registry.yarnpkg.com/react-native-masonry-list/-/react-native-masonry-list-2.16.2.tgz#7f860b878cb3df3591954913ae64e188e32acdd9"
+  integrity sha512-n/660aX+6iMKJMHgEgn4K/VQRH8Fv59OdlYtLoj2zmLwHTz6+IZql81Wq8WVBdidF5i5ZXm2lWKn/qLlRpVUVg==
   dependencies:
     prop-types "^15.6.2"
 
