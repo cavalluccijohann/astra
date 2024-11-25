@@ -1557,11 +1557,11 @@
     nullthrows "^1.1.1"
 
 "@react-navigation/bottom-tabs@^7.0.0":
-  version "7.0.9"
-  resolved "https://registry.yarnpkg.com/@react-navigation/bottom-tabs/-/bottom-tabs-7.0.9.tgz#be4920328d0117bb4afe23bd0d28726e3e63bb7e"
-  integrity sha512-H5pmetpF3JmCkd7AciN2VG975kI6YI3kbuhavpLJ8s94+T6K1HzfuW3Jnllkb3Dh0mELzsc8/iGT+7QRiTc6EA==
+  version "7.0.11"
+  resolved "https://registry.yarnpkg.com/@react-navigation/bottom-tabs/-/bottom-tabs-7.0.11.tgz#cb428dcc6a3af73f70020a8963650a37c92b9255"
+  integrity sha512-an6GOjhQNk8tdbWMB+6MUWAZxjQvJ+mNKhdRKcfjNwJkFWmQHzAH0ipX9Cihkl6IheJdstBGqdApMC2R2ias5Q==
   dependencies:
-    "@react-navigation/elements" "^2.1.3"
+    "@react-navigation/elements" "^2.1.5"
     color "^4.2.3"
 
 "@react-navigation/core@^7.0.6":
@@ -1577,10 +1577,10 @@
     use-latest-callback "^0.2.1"
     use-sync-external-store "^1.2.2"
 
-"@react-navigation/elements@^2.1.3":
-  version "2.1.3"
-  resolved "https://registry.yarnpkg.com/@react-navigation/elements/-/elements-2.1.3.tgz#654f6737c2e7176af6d658c9bce1bad5ffe36d30"
-  integrity sha512-y+DuN+SqXbWk1sIiNB34SozVf1piDilUD7ipfBCVwamcCdms2MXj6m3g2OUIeVWldbqOVhc+/B0mK0Am3P0KXQ==
+"@react-navigation/elements@^2.1.5":
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/@react-navigation/elements/-/elements-2.1.5.tgz#e83b36308f5307be15d80bc269c2a5ea8a7e8495"
+  integrity sha512-+m74coqW8P7CFMhddjypZDubAaNZ5NlXC7jzFtWgkoK0Zt9SOu4NYT/UvyyMR+cCkjE8HtLr1HCOcmdDtRw5xQ==
   dependencies:
     color "^4.2.3"
 
@@ -1603,11 +1603,11 @@
     nanoid "3.3.7"
 
 "@react-navigation/stack@^7.0.0":
-  version "7.0.9"
-  resolved "https://registry.yarnpkg.com/@react-navigation/stack/-/stack-7.0.9.tgz#121370a61859fde2507832118b1e79cda48ffc70"
-  integrity sha512-aa0K740tOgdH0FZTcQ2d81zvOGB7k8hyiX4//pRc7M/ZqocdY/jgRz+RLh8LVg8S3kjuSuWzugCohPOurl+d1g==
+  version "7.0.11"
+  resolved "https://registry.yarnpkg.com/@react-navigation/stack/-/stack-7.0.11.tgz#0188ca3f5178a60cd1520b045f053406ffb8f0c5"
+  integrity sha512-b4peMeCibDBHlQ2y930XBOwwbjMOdk0lYmdMFF+LixLolFIlXgHA7QvmymG/lbspQdVBx2ETvphdgTOUbjkwpQ==
   dependencies:
-    "@react-navigation/elements" "^2.1.3"
+    "@react-navigation/elements" "^2.1.5"
     color "^4.2.3"
 
 "@segment/loosely-validate-event@^2.0.0":
