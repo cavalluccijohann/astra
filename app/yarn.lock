@@ -3054,7 +3054,7 @@ expo-file-system@~18.0.6:
   dependencies:
     web-streams-polyfill "^3.3.2"
 
-expo-font@^13.0.2, expo-font@~13.0.2:
+expo-font@~13.0.2:
   version "13.0.2"
   resolved "https://registry.yarnpkg.com/expo-font/-/expo-font-13.0.2.tgz#efd3e91714c040a0cf38db91920bce2e0331ff6e"
   integrity sha512-H9FaXM7ZW5+EfV38w80BgJG3H17kB7CuVXwHoiszIYyoPfWz9bWesFe4QwNZjTq3pzKes28sSd8irFuflIrSIA==
@@ -5201,13 +5201,12 @@ react-native-masonry-list@^2.16.1:
     prop-types "^15.6.2"
 
 react-native-paper@^5.12.3:
-  version "5.13.0"
-  resolved "https://registry.yarnpkg.com/react-native-paper/-/react-native-paper-5.13.0.tgz#a2f906b843325faabd5c0f076728419afe9dd69d"
-  integrity sha512-cCCIcdRG35xbTSSw2MSl88YlO6VxdgEIxe/V8IB9TtJmCwR3D7Xtx66s5wKFatZCactTfoDslF6Glw9AinhGqA==
+  version "5.13.1"
+  resolved "https://registry.yarnpkg.com/react-native-paper/-/react-native-paper-5.13.1.tgz#50217012b2d008397296c9bfb755d603a373f48b"
+  integrity sha512-8frKVKJ5JBd8WL1G3tpcYzOgK40kxkD/U+yLHGKNeLnD6v1Qc9W6DxWTHWN7lsX/DPYnhgvw1aKkYaPTmDj5pg==
   dependencies:
     "@callstack/react-theme-provider" "^3.0.9"
     color "^3.1.2"
-    expo-font "^13.0.2"
     use-latest-callback "^0.1.5"
 
 react-native-picker-select@^9.1.3:
