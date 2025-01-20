@@ -2950,9 +2950,9 @@ expo-asset@~11.0.2:
     md5-file "^3.2.3"
 
 expo-camera@~16.0.0:
-  version "16.0.12"
-  resolved "https://registry.yarnpkg.com/expo-camera/-/expo-camera-16.0.12.tgz#ef1612958f6dc8c7b826bfb5f31ba03a3b4be853"
-  integrity sha512-0dQkbq0i8+dcb2UyGG5kDHKF8Oo3pMgmXBYhgC69cTTdafjIXRvfSLWBNOxbbeJ3DQna2ujlOZ7UbTh6v2tgrA==
+  version "16.0.13"
+  resolved "https://registry.yarnpkg.com/expo-camera/-/expo-camera-16.0.13.tgz#3f79e46686e664a464464157f72e1337e9731bc1"
+  integrity sha512-vUcD8Yc7boNBJVHmiA30qg8jJ4infXm82YqRHYrVGH9O8gzOnCWUqdJpSGdfPX7E5q3RVKvcezQDSOQF/QXIRA==
   dependencies:
     invariant "^2.2.4"
 
