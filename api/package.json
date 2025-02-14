@@ -24,7 +24,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.536.0",
     "@prisma/client": "^6.0.0",
-    "bcryptjs": "^2.4.3",
+    "bcryptjs": "^3.0.0",
     "jsonwebtoken": "^9.0.2",
     "nitropack-nightly": "^2.10.0-28555945.eedc041e",
     "sharp": "^0.33.3"
