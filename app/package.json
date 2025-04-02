@@ -22,7 +22,7 @@
     "react-native-masonry-list": "^2.16.1",
     "react-native-picker-select": "^9.1.3",
     "react-native-vector-icons": "^10.0.3",
-    "tailwindcss": "4.0.17"
+    "tailwindcss": "4.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
