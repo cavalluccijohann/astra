@@ -2920,9 +2920,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.5.73:
-  version "1.5.130"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.130.tgz#19f5dd2cf166a8dd1350b08230a33faba0d8f4ec"
-  integrity sha512-Ou2u7L9j2XLZbhqzyX0jWDj6gA8D3jIfVzt4rikLf3cGBa0VdReuFimBKS9tQJA4+XpeCxj1NoWlfBXzbMa9IA==
+  version "1.5.131"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.131.tgz#c28993f0624d283ef2e7debb567264730f3f4416"
+  integrity sha512-fJFRYXVEJgDCiqFOgRGJm8XR97hZ13tw7FXI9k2yC5hgY+nyzC2tMO8baq1cQR7Ur58iCkASx2zrkZPZUnfzPg==
 
 emoji-regex@^8.0.0:
   version "8.0.0"
@@ -3136,9 +3136,9 @@ expo-status-bar@~2.0.0:
   integrity sha512-AkIPX7jWHRPp83UBZ1iXtVvyr0g+DgBVvIXTtlmPtmUsm8Vq9Bb5IGj86PW8osuFlgoTVAg7HI/+Ok7yEYwiRg==
 
 expo@~52.0.0:
-  version "52.0.43"
-  resolved "https://registry.yarnpkg.com/expo/-/expo-52.0.43.tgz#6bc9992ed759ca7e83b540a7adef837163c0159e"
-  integrity sha512-3kBzZq+FTf6Uv5WsY93M71jZ0gHF/iwN4GvSXkJ7hDB76XC/V09jkdhc6EsEmvtWZ42ff+saLOjUdRHqXyeO4w==
+  version "52.0.44"
+  resolved "https://registry.yarnpkg.com/expo/-/expo-52.0.44.tgz#3e7aa0e3d373c70a328b349852b4a35867ecc930"
+  integrity sha512-qj3+MWxmqLyBaYQ8jDOvVLEgSqNplH3cf+nDhxCo4C1cpTPD1u/HGh1foibtaeuCYLHsE5km1lrcOpRbFJ4luQ==
   dependencies:
     "@babel/runtime" "^7.20.0"
     "@expo/cli" "0.22.24"
