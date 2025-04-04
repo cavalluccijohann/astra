@@ -27,6 +27,6 @@
     "bcryptjs": "^3.0.0",
     "jsonwebtoken": "^9.0.2",
     "nitropack-nightly": "^2.10.0-28555945.eedc041e",
-    "sharp": "^0.33.3"
+    "sharp": "^0.34.0"
   }
 }
